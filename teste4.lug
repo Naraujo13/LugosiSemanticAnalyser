@@ -1,0 +1,18 @@
+main {
+  var int x;
+  var bool y;
+  var int z;
+
+  x := 10;
+  y := true;
+  z := x ((x + y), (y - x), true, false, 200.5);
+
+  if ((x && y)){
+    while ((x > 0)){
+      print (x);
+      x := (x - 1);
+    };
+  };
+
+  return 0;
+}
