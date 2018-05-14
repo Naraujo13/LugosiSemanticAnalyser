@@ -17,6 +17,7 @@ public class Lugosi implements LugosiConstants {
       case WHILE:
       case DO:
       case RETURN:
+      case PRINT:
       case ID:{
         ;
         break;
@@ -43,7 +44,10 @@ public class Lugosi implements LugosiConstants {
         jj_consume_token(APARENTESES);
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case APARENTESES:
-        case ID:{
+        case TRUE:
+        case FALSE:
+        case ID:
+        case NUMERO:{
           ListaExp();
           break;
           }
@@ -92,6 +96,13 @@ public class Lugosi implements LugosiConstants {
       jj_consume_token(FPARENTESES);
       break;
       }
+    case PRINT:{
+      jj_consume_token(PRINT);
+      jj_consume_token(APARENTESES);
+      Exp();
+      jj_consume_token(FPARENTESES);
+      break;
+      }
     case RETURN:{
       jj_consume_token(RETURN);
       Exp();
@@ -105,6 +116,60 @@ public class Lugosi implements LugosiConstants {
     jj_consume_token(PVIRGULA);
 }
 
+  static final public void Func() throws ParseException {
+    label_2:
+    while (true) {
+      jj_consume_token(FUNCTION);
+      Tipo();
+      jj_consume_token(ID);
+      jj_consume_token(APARENTESES);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case INT:
+      case BOOL:{
+        ListaArg();
+        break;
+        }
+      default:
+        jj_la1[4] = jj_gen;
+        ;
+      }
+      jj_consume_token(FPARENTESES);
+      jj_consume_token(ACHAVES);
+      VarDecl();
+      SeqComandos();
+      jj_consume_token(FCHAVES);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case FUNCTION:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[5] = jj_gen;
+        break label_2;
+      }
+    }
+}
+
+  static final public void ListaArg() throws ParseException {
+    Tipo();
+    jj_consume_token(ID);
+    label_3:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case VIRGULA:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[6] = jj_gen;
+        break label_3;
+      }
+      jj_consume_token(VIRGULA);
+      Tipo();
+      jj_consume_token(ID);
+    }
+}
+
   static final public void Exp() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case APARENTESES:{
@@ -115,44 +180,71 @@ public class Lugosi implements LugosiConstants {
       jj_consume_token(FPARENTESES);
       break;
       }
-    case ID:{
+    case TRUE:
+    case FALSE:
+    case ID:
+    case NUMERO:{
       Fator();
       break;
       }
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[7] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 }
 
   static final public void Fator() throws ParseException {
-    jj_consume_token(ID);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case APARENTESES:{
-      jj_consume_token(APARENTESES);
+    case ID:{
+      jj_consume_token(ID);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case APARENTESES:
-      case ID:{
-        ListaExp();
+      case APARENTESES:{
+        jj_consume_token(APARENTESES);
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case APARENTESES:
+        case TRUE:
+        case FALSE:
+        case ID:
+        case NUMERO:{
+          ListaExp();
+          break;
+          }
+        default:
+          jj_la1[8] = jj_gen;
+          ;
+        }
+        jj_consume_token(FPARENTESES);
         break;
         }
       default:
-        jj_la1[5] = jj_gen;
+        jj_la1[9] = jj_gen;
         ;
       }
-      jj_consume_token(FPARENTESES);
+      break;
+      }
+    case NUMERO:{
+      jj_consume_token(NUMERO);
+      break;
+      }
+    case TRUE:{
+      jj_consume_token(TRUE);
+      break;
+      }
+    case FALSE:{
+      jj_consume_token(FALSE);
       break;
       }
     default:
-      jj_la1[6] = jj_gen;
-      ;
+      jj_la1[10] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
     }
 }
 
   static final public void ListaExp() throws ParseException {
     Exp();
-    label_2:
+    label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case VIRGULA:{
@@ -160,8 +252,8 @@ public class Lugosi implements LugosiConstants {
         break;
         }
       default:
-        jj_la1[7] = jj_gen;
-        break label_2;
+        jj_la1[11] = jj_gen;
+        break label_4;
       }
       jj_consume_token(VIRGULA);
       Exp();
@@ -179,14 +271,14 @@ public class Lugosi implements LugosiConstants {
       break;
       }
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[12] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 }
 
   static final public void VarDecl() throws ParseException {
-    label_3:
+    label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case VAR:{
@@ -194,8 +286,8 @@ public class Lugosi implements LugosiConstants {
         break;
         }
       default:
-        jj_la1[9] = jj_gen;
-        break label_3;
+        jj_la1[13] = jj_gen;
+        break label_5;
       }
       jj_consume_token(VAR);
       Tipo();
@@ -206,6 +298,15 @@ public class Lugosi implements LugosiConstants {
 
   static final public void Lugosi() throws ParseException {
     Main();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case FUNCTION:{
+      Func();
+      break;
+      }
+    default:
+      jj_la1[14] = jj_gen;
+      ;
+    }
     jj_consume_token(0);
 }
 
@@ -227,13 +328,13 @@ public class Lugosi implements LugosiConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[10];
+  static final private int[] jj_la1 = new int[15];
   static private int[] jj_la1_0;
   static {
 	   jj_la1_init_0();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x8e8000,0x800200,0x200200,0x8e8000,0x800200,0x800200,0x200,0x800,0x6000,0x40,};
+	   jj_la1_0 = new int[] {0x41e8000,0xd800200,0x200200,0x41e8000,0x6000,0x400000,0x800,0xd800200,0xd800200,0x200,0xd800000,0x800,0x6000,0x40,0x400000,};
 	}
 
   /** Constructor with InputStream. */
@@ -254,7 +355,7 @@ public class Lugosi implements LugosiConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 15; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -268,7 +369,7 @@ public class Lugosi implements LugosiConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 15; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -285,7 +386,7 @@ public class Lugosi implements LugosiConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 15; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -303,7 +404,7 @@ public class Lugosi implements LugosiConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 15; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -319,7 +420,7 @@ public class Lugosi implements LugosiConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 15; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -328,7 +429,7 @@ public class Lugosi implements LugosiConstants {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 15; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -379,12 +480,12 @@ public class Lugosi implements LugosiConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[24];
+	 boolean[] la1tokens = new boolean[28];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 10; i++) {
+	 for (int i = 0; i < 15; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -393,7 +494,7 @@ public class Lugosi implements LugosiConstants {
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 24; i++) {
+	 for (int i = 0; i < 28; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;

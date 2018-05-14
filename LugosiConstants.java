@@ -43,9 +43,17 @@ public interface LugosiConstants {
   /** RegularExpression Id. */
   int ATRIB = 21;
   /** RegularExpression Id. */
-  int OP = 22;
+  int FUNCTION = 22;
   /** RegularExpression Id. */
-  int ID = 23;
+  int TRUE = 23;
+  /** RegularExpression Id. */
+  int FALSE = 24;
+  /** RegularExpression Id. */
+  int OP = 25;
+  /** RegularExpression Id. */
+  int ID = 26;
+  /** RegularExpression Id. */
+  int NUMERO = 27;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -74,8 +82,12 @@ public interface LugosiConstants {
     "\"return\"",
     "\"print\"",
     "\":=\"",
+    "\"function\"",
+    "\"true\"",
+    "\"false>\"",
     "<OP>",
     "<ID>",
+    "<NUMERO>",
   };
 
 }
