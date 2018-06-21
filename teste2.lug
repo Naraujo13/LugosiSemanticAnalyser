@@ -1,0 +1,10 @@
+main {
+  var int x;
+  x := 10;
+
+  if ((x == 10)){
+    print (x);
+  };
+
+  return 0;
+}

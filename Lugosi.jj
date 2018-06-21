@@ -1,14 +1,102 @@
 PARSER_BEGIN(Lugosi)
 import java.io.*;
+import.java.util.arraylist;
+
 public class Lugosi {
+
+  private Main main;
+  private ArrayList<Func> funcs;
+  private ArrayList<Comando> comandos;
 
   public static void main(String args[]) throws ParseException,IOException {
 
     Lugosi parser = new Lugosi(new FileInputStream(args[0]));
     parser.Lugosi();
+
   }
 
 }
+
+
+public class Main extends Func {
+
+  public Main(List<Var> vars, List<Command> commands){
+    super(
+      new Int(),
+      "main",
+      new ArrayList(),
+      new ArrayList(vars),
+      new ArrayList(commands);
+  }
+
+}
+
+public class Func {
+
+  private Type returnType;
+  private String name;
+  private ArrayList<Var> args;
+  private ArrayList<Var> vars;
+  private ArrayList<Comamand> commands;
+
+  public Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> commands){
+    this.returnType = returnType;
+    this.name = name;
+    this.args = new ArrayList(args);
+    this.vars = new ArrayList(vars);
+    this.commands = ArrayList(commands);
+  }
+
+}
+
+public class Var {
+  private Type type;
+  private String value;
+
+  public Var(String type, String value){
+    this.type = type;
+    this.value = value;
+  }
+}
+
+
+public abstract class Command {}
+public class Atrib extends Command {}
+public class Indexing extends Command {}
+public class If extends Command {}
+public class While extends Command {}
+public class Do extends Command {}
+
+public class Return extends Command {
+  private String Value;
+}
+
+public class Print extends Command {}
+
+
+public abstract class Type {}
+
+public class Int extends Type{}
+
+public class Bool extends Type{}
+
+public class ID {
+  private nome;
+
+}
+
+public abstract class ExpBase {}
+public class Exp extends ExpBase{
+  private ExpBase exp1;
+  private Op op;
+  private ExpBase exp1;
+}
+public class Fator extends ExpBase {
+  private
+}
+
+
+public class
 
 PARSER_END(Lugosi)
 
