@@ -1,32 +1,17 @@
 PARSER_BEGIN(Lugosi)
 import java.io.*;
-import.java.util.arraylist;
+import java.util.ArrayList;
 
 public class Lugosi {
 
   private Main main;
   private ArrayList<Func> funcs;
-  private ArrayList<Comando> comandos;
 
   public static void main(String args[]) throws ParseException,IOException {
 
     Lugosi parser = new Lugosi(new FileInputStream(args[0]));
     parser.Lugosi();
 
-  }
-
-}
-
-
-public class Main extends Func {
-
-  public Main(List<Var> vars, List<Command> commands){
-    super(
-      new Int(),
-      "main",
-      new ArrayList(),
-      new ArrayList(vars),
-      new ArrayList(commands);
   }
 
 }
@@ -49,6 +34,21 @@ public class Func {
 
 }
 
+public class Main extends Func {
+
+  public Main(List<Var> vars, List<Command> commands){
+    super(
+      new Int(),
+      "main",
+      new ArrayList(),
+      new ArrayList(vars),
+      new ArrayList(commands)
+    );
+  }
+
+}
+
+
 public class Var {
   private Type type;
   private String value;
@@ -59,20 +59,49 @@ public class Var {
   }
 }
 
+//--- Comandos
 
 public abstract class Command {}
-public class Atrib extends Command {}
-public class Indexing extends Command {}
-public class If extends Command {}
-public class While extends Command {}
-public class Do extends Command {}
 
+public class Atrib extends Command {
+  ID id;
+  Exp exp;
+}
+
+//If
+public class If extends Command {
+  //Condition
+  Exp exp;
+  ArrayList<Comamand> comandos;
+
+
+}
+
+//While
+public class While extends Command {
+  Exp exp;
+  ArrayList<Command> commandos;
+}
+
+//Do While
+public class DoWhile extends While {}
+
+//Return
 public class Return extends Command {
   private String Value;
 }
 
-public class Print extends Command {}
+//Print
+public class Print extends Command {
+  Exp exp;
+}
 
+// ----------------------------------
+
+public class Indexing extends Command {}
+
+
+//----- Types
 
 public abstract class Type {}
 
@@ -80,23 +109,75 @@ public class Int extends Type{}
 
 public class Bool extends Type{}
 
+// -----------------------------------
+
+//ID
 public class ID {
-  private nome;
+  String nome;
 
 }
 
-public abstract class ExpBase {}
+//NUM
+public class NUM {
+  String valor;
+
+  public NUM (String valor){this.valor=valor;}
+
+}
+
+public class Bool {
+  String valor;
+  public Bool(String valor){this.valor=valor;}
+}
+//---- Exp
+
 public class Exp extends ExpBase{
   private ExpBase exp1;
   private Op op;
   private ExpBase exp1;
 }
+
 public class Fator extends ExpBase {
-  private
+  
+}
+
+//Base
+public abstract class Exp {
+
+}
+
+//Exp op Exp
+class ExpOpExp extends Exp {
+  Exp exp1;
+  String op;
+  Exp exp2;
+}
+
+//Fator
+class ExpFator extends Exp{
+  Fator fator;
+}
+
+//Fator base
+public abstract class Fator {}
+
+//Fator = id ou Fator = lista
+class FatorId extends Fator {
+  ID id;
+}
+
+//Fator = num
+class FatorNum extends Fator {
+  NUM num;
 }
 
 
-public class
+//Fator = bool
+class FatorBool extends Fator {
+  Bool valor;
+}
+
+
 
 PARSER_END(Lugosi)
 
@@ -174,18 +255,21 @@ void ListaArg():
 }
 
 void Exp():
-{}
+{Exp e1=null;Exp e2=null;Token t;}
 {
   (<APARENTESES> Exp() <OP> Exp() <FPARENTESES>) | Fator()
 }
 
 void Fator():
-{}
+{ExpFator expF=null;ID id=null;ArrayList<Exp> l;Token t;}
 {
-    (<ID> (<APARENTESES> (ListaExp())?  <FPARENTESES>)?)
-  | <NUMERO>
-  | <TRUE>
-  | <FALSE>
+  (
+      ( t=<ID>{id=new ID(t.image);} (<APARENTESES> (l=ListaExp())?  <FPARENTESES>)?)
+    | (t=<NUMERO>{expF = new FatorNum(t.image);})
+    | (t=<TRUE>{expF = new FatorBool(t.image);})
+    | (t=<FALSE>{expF = new FatorBool(t.image);})
+  )
+  {return expF;}
 }
 
 void ListaExp():
@@ -195,9 +279,13 @@ void ListaExp():
 }
 
 void Tipo():
-{}
+{Type type = null; Token t;}
 {
-  (<INT>|<BOOL>)
+  (
+      (t=<INT> { type = new NUM(t.image); }) 
+    | (t=<BOOL> { type = new Bool(t.image); })
+  )
+  {return type;}
 }
 
 void VarDecl():
