@@ -142,39 +142,75 @@ public class Fator extends ExpBase {
 }
 
 //Base
-public abstract class Exp {
-
-}
+public abstract class Exp {}
 
 //Exp op Exp
 class ExpOpExp extends Exp {
   Exp exp1;
   String op;
   Exp exp2;
+
+  public ExpOpExp (Exp exp1, String op, Exp exp2) { 
+    this.exp1 = exp1;
+    this.op = op;
+    this.exp2 = exp2;
+  }
+
 }
 
 //Fator
-class ExpFator extends Exp{
+class ExpFator extends Exp {
   Fator fator;
+
+  public ExpFator (Fator fator) {
+    this.fator = fator;
+  }
+
 }
 
 //Fator base
 public abstract class Fator {}
 
-//Fator = id ou Fator = lista
+//Fator = id
 class FatorId extends Fator {
   ID id;
+
+  public FatorId (Id id){
+    this.id = id;
+  }
+
+}
+
+//Fator = id (lista)
+class FatorIdLista extends Fator {
+  ID id;
+  ArrayList<Exp> exp;
+
+  public FatorIdLista (Id id, ArrayList<Exp> exp){
+    this.id = id;
+    this.exp = exp;
+  }
+
 }
 
 //Fator = num
 class FatorNum extends Fator {
   NUM num;
+  
+  public FatorNum (NUM num) {
+    this.num = num;
+  }
+
 }
 
 
 //Fator = bool
 class FatorBool extends Fator {
   Bool valor;
+
+  public FatorBool (Bool valor){
+    this.valor = valor;
+  }
 }
 
 
@@ -255,27 +291,32 @@ void ListaArg():
 }
 
 void Exp():
-{Exp e1=null;Exp e2=null;Token t;}
+{Exp retorno;Exp e1=null;Exp e2=null;Token t;}
 {
-  (<APARENTESES> Exp() <OP> Exp() <FPARENTESES>) | Fator()
+  
+    (<APARENTESES> e1=Exp() t=<OP> e2=Exp() <FPARENTESES> {retorno = new ExpOpExp(e1,t.image,e2);}) | (retorno=Fator())
+  
+  {return retorno;}
 }
 
 void Fator():
-{ExpFator expF=null;ID id=null;ArrayList<Exp> l;Token t;}
+{ExpFator expF=null;ID id=null;ArrayList<Exp> l = new ArrayList<>();Token t;}
 {
-  (
-      ( t=<ID>{id=new ID(t.image);} (<APARENTESES> (l=ListaExp())?  <FPARENTESES>)?)
-    | (t=<NUMERO>{expF = new FatorNum(t.image);})
-    | (t=<TRUE>{expF = new FatorBool(t.image);})
-    | (t=<FALSE>{expF = new FatorBool(t.image);})
-  )
+  
+    (t=<ID> {id=new ID(t.image);} (<APARENTESES> (l=ListaExp())?  <FPARENTESES>)? {expF = new FatorIdLista(id,l)})
+  | (t=<NUMERO> {expF = new FatorNum(t.image);})
+  | (t=<TRUE>   {expF = new FatorBool(t.image);})
+  | (t=<FALSE>  {expF = new FatorBool(t.image);})
+  
   {return expF;}
 }
 
 void ListaExp():
-{}
+{ArrayList<Exp> retorno = new ArrayList<>();}
 {
-  Exp() (<VIRGULA> Exp())*
+  {retorno.add(Exp())} (<VIRGULA> {retorno.add(Exp())})*
+
+  {return retorno;}
 }
 
 void Tipo():
