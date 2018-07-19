@@ -13,7 +13,6 @@ public class Lugosi {
     parser.Lugosi();
 
   }
-
 }
 
 public class Func {
@@ -22,14 +21,14 @@ public class Func {
   private String name;
   private ArrayList<Var> args;
   private ArrayList<Var> vars;
-  private ArrayList<Comamand> commands;
+  private ArrayList<Comamand> comandos;
 
-  public Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> commands){
+  public Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> comandos){
     this.returnType = returnType;
     this.name = name;
     this.args = new ArrayList(args);
     this.vars = new ArrayList(vars);
-    this.commands = ArrayList(commands);
+    this.comandos = ArrayList(comandos);
   }
 
 }
@@ -51,11 +50,11 @@ public class Main extends Func {
 
 public class Var {
   private Type type;
-  private String value;
+  private ID id;
 
-  public Var(String type, String value){
+  public Var(String type, ID id){
     this.type = type;
-    this.value = value;
+    this.id = id;
   }
 }
 
@@ -66,21 +65,50 @@ public abstract class Command {}
 public class Atrib extends Command {
   ID id;
   Exp exp;
+
+  public Atrib (Id id, Exp exp){
+    this.id = id;
+    this.exp = exp;
+  }
+
 }
+
+//Chamada de função
+
+public class functionCall extends Command {
+  ID id;
+  ArrayList<Exp> args;
+
+  public functionCall(Id id, ArrayList<Exp> args){
+    this.id = id;
+    this.args = args;
+  }
+}
+
 
 //If
 public class If extends Command {
   //Condition
   Exp exp;
-  ArrayList<Comamand> comandos;
+  ArrayList<Command> comandos;
 
+  public If (Exp exp, ArrayList<Command> comandos) {
+    this.exp = exp;
+    this.comandos = comandos;
+  }
 
 }
 
 //While
 public class While extends Command {
   Exp exp;
-  ArrayList<Command> commandos;
+  ArrayList<Command> comandos;
+
+  public While (Exp exp, ArrayList<Command> comandos) {
+    this.exp = exp;
+    this.comandos = comandos;
+  }
+
 }
 
 //Do While
@@ -88,12 +116,22 @@ public class DoWhile extends While {}
 
 //Return
 public class Return extends Command {
-  private String Value;
+  private Exp exp;
+
+public Return (Exp exp) {
+  this.exp = exp;
+}
+
 }
 
 //Print
 public class Print extends Command {
   Exp exp;
+
+  public Print (Exp exp) {
+    this.exp = exp;
+  }
+
 }
 
 // ----------------------------------
@@ -114,6 +152,10 @@ public class Bool extends Type{}
 //ID
 public class ID {
   String nome;
+
+  public ID (String nome) {
+    this.nome = nome;
+  }
 
 }
 
@@ -257,37 +299,39 @@ TOKEN :
 }
 
 void SeqComandos():
-{}
+{ArrayList<Command> comandos = new ArrayList<>(); }
 {
-  (Comando())*
+  ( { comandos.add(Comando()); } )*
+
+  {return comandos;}
 }
 
 void Comando():
-{}
+{Command c = null; ID id; Token t; Exp e1; Exp e2; ArrayList<Command> comandos; }
 {
   (
-      (<ID> ((<ATRIB> Exp()) | (<APARENTESES> (ListaExp())? <FPARENTESES>)))
-    | (<IF> <APARENTESES> Exp() <FPARENTESES> <ACHAVES> SeqComandos() <FCHAVES>)
-    | (<WHILE> <APARENTESES> Exp() <FPARENTESES> <ACHAVES> SeqComandos() <FCHAVES>)
-    | (<DO> <ACHAVES> SeqComandos() <FCHAVES> <WHILE> <APARENTESES> Exp() <FPARENTESES>)
-    | (<PRINT> <APARENTESES> Exp() <FPARENTESES>)
-    | (<RETURN> Exp())
+      ( t=<ID> {id = new ID(t.image);} ((<ATRIB> { c = new Atrib(id, Exp()); } ) | (<APARENTESES>  { c = new functionCall(id, ListaExp()); } <FPARENTESES>)) )
+    | ( <IF> <APARENTESES> {e1 = Exp();} <FPARENTESES> <ACHAVES> { c = new If (e1, SeqComandos()); } <FCHAVES> )
+    | ( <WHILE> <APARENTESES> {e1 = Exp(); } <FPARENTESES> <ACHAVES> {c = new While(e1, SeqComandos()); } <FCHAVES> )
+    | ( <DO> <ACHAVES> { comandos = SeqComandos(); } <FCHAVES> <WHILE> <APARENTESES> { c = new DoWhile(comandos, Exp()); }  <FPARENTESES> )
+    | ( <PRINT> <APARENTESES> { c = new Print(Exp()); } <FPARENTESES>)
+    | ( <RETURN> { c = new Return (Exp()); }) 
   )
   <PVIRGULA>
+
+  {return c;}
 }
+
+Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> commands)
 
 void Func ():
-{}
+{ ArrayLis<Func> functions = new ArrayList<>(); Type returnType; String name;  ArrayList<Var> args; ArrayList<Var> vars; ArrayList<Command> comandos; Token token; }
 {
 
-  (<FUNCTION> Tipo() <ID> <APARENTESES> (ListaArg())? <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)+
+  (<FUNCTION> {returnType = Tipo();} t=<ID> <APARENTESES> { args = VarDecl(); } <FPARENTESES> <ACHAVES> {vars = VarDecl();} {comandos = SeqComandos();} <FCHAVES> {functions.add(new Func(returnType, t.image, args, vars, comandos));})*
 
-}
+  {return functions;}
 
-void ListaArg():
-{}
-{
-  Tipo() <ID> (<VIRGULA> Tipo() <ID>)*
 }
 
 void Exp():
@@ -330,29 +374,34 @@ void Tipo():
 }
 
 void VarDecl():
-{}
+{ ArrayList<Var> lista_var = new ArrayList<>(); Type type=null; ID id=null; Token t;}
 {
-  (<VAR> Tipo() <ID> <PVIRGULA>)*
+  ( <VAR> { type=Tipo(); } t=<ID> { id = new ID(t.image); } <PVIRGULA> { lista_var.add(new Var(type, id)); } )*
+  {return lista_var;}
 }
 
 void Lugosi () :
-{}
+{Main main; ArrayList<Func> functions;}
 {
 
-  Main()
-  (Func())?
+  (main = Main())
+  (functions = Func())
   <EOF>
+
+  { return (new Lugosi (main, functions)); }
 }
 
 void Main ():
-{}
+{ArrayList<Var> lista_var; ArrayList<Command> comandos;}
 {
  <MAIN> <ACHAVES>
 
- VarDecl()
- SeqComandos()
+ { lista_var = VarDecl(); }
+ { comandos = SeqComandos(); }
 
  <FCHAVES>
+
+ {return (new Main (lista_var, comandos));}
 
 }
 
