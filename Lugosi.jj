@@ -4,58 +4,308 @@ import java.util.ArrayList;
 
 public class Lugosi {
 
-  private Main main;
-  private ArrayList<Func> funcs;
 
-  public static void main(String args[]) throws ParseException,IOException {
+	public static void main(String args[]) throws ParseException,IOException {
 
-    Lugosi parser = new Lugosi(new FileInputStream(args[0]));
-    parser.Lugosi();
+		Lugosi parser = new Lugosi(new FileInputStream(args[0])); //TODO tem q ter outro nome, lugosi tem que ser a regra incial
+		Object e = parser.Lugosi();
+		pretty_printer(e);
 
-  }
+	}
+
+
+//TODO classe lugosi
+
+	static void pretty_printer()
+	{
+
+		if(e instanceof (Lugosi))
+		{
+			pretty_printer(e.main_func);
+			ArrayList<Func> functions = e.funcs;
+			for(Func func : functions){
+				pretty_printer(func);
+			}
+
+		}
+		else if(e instanceof (Main))
+		{
+			System.out.print("main");
+			System.out.print("{");
+			ArrayList<Var> vardecl = e.vars;
+			for(Var var : vardecl){
+				pretty_printer(var);
+			}
+
+			ArrayList<Comamand> seqcomandos = e.comandos;
+			for(Comamand com : seqcomandos){
+				pretty_printer(com);
+			}
+			System.out.print("}");
+		}
+
+		else if(e instanceof (Var))
+		{
+			System.out.print("var");
+
+			pretty_printer(e.type);
+
+			pretty_printer(e.id);
+
+			System.out.print(";");
+		}
+
+		else if(e instanceof (Int)) //TODO arrumar a parte do Type
+		{
+			System.out.print("int");
+		}
+
+		else if(e instanceof (Bool))
+		{
+			System.out.print("bool");
+		
+		}
+
+		else if(e instanceof (Atrib))
+		{
+			pretty_printer(e.id);
+			System.out.print(":=");
+			pretty_printer(e.exp);
+			System.out.print(";");
+		}
+
+		else if(e instanceof (functionCall))
+		{
+			pretty_printer(e.id);
+			System.out.print("(");
+
+			for(Exp exp: e.args) {
+				pretty_printer(exp);
+			}
+
+			System.out.print(")");
+		
+			System.out.print(";");
+		}
+
+		else if(e instanceof (If))
+		{
+			
+			System.out.print("if");
+			System.out.print("(");
+
+			
+			pretty_printer(e.exp);
+			
+
+			System.out.print(")");
+		
+			System.out.print("{");
+
+			for(Command com: e.comandos) {
+				pretty_printer(com);
+			}
+
+			System.out.print("}");
+		
+			System.out.print(";");
+		}
+	
+		else if (e instanceof (While))
+		{
+			System.out.print("while");
+			System.out.print("(");
+
+			
+			pretty_printer(e.exp);
+			
+
+			System.out.print(")");
+			System.out.print("{");
+			System.out.print("do");
+
+			for(Command com: e.comandos) {
+				pretty_printer(com);
+			}
+
+			System.out.print("}");
+		
+			System.out.print(";");
+				
+		}
+
+		else if (e instanceof (DoWhile))
+		{
+			
+			System.out.print("{");
+			System.out.print("do");
+
+			for(Command com: e.comandos) {
+				pretty_printer(com);
+			}
+
+			System.out.print("}");
+
+			System.out.print("while");
+			System.out.print("(");
+
+			
+			pretty_printer(e.exp);
+			
+
+			System.out.print(")");
+		
+			System.out.print(";");
+		}
+
+		else if (e instanceof (Return))
+		{
+			System.out.print("Return");
+			pretty_printer(e.exp);
+			System.out.print(";")
+
+		}
+		else if(e instanceof (Print))
+		{
+			System.out.print("Return");
+			System.out.print("(");
+
+			pretty_printer(e.exp);
+
+			System.out.print(")");
+			System.out.print(";")
+
+		}
+
+		else if(e instanceof (ExpOpExp))
+		{
+			System.out.print("(");
+
+			pretty_printer(e.exp1);
+			pretty_printer(e.op);
+			pretty_printer(e.exp2);
+
+			System.out.print(")");
+		}
+
+		else if(e instanceof (ExpFator))
+		{
+			pretty_printer(e.fator);
+		}
+
+		else if(e instanceof (FatorId))
+		{
+			pretty_printer(e.id);
+		}
+
+		else if(e instanceof (FatorIdLista))
+		{
+			pretty_printer(e.id);
+			System.out.print("(");
+
+			for (Exp expression: e.exp) {
+				pretty_printer(expression);
+			}
+			System.out.print(")");
+
+		}
+
+		else if(e instanceof (FatorNum))
+		{
+			pretty_printer(e.num);
+		}
+		else if(e instanceof NUM)
+		{
+			System.out.print(e.valor);
+		}
+		else if(e instanceof FatorBool)
+		{
+			pretty_printer(e.valor)
+		}
+		else if(e instanceof Bool)
+		{
+			System.out.print(e.valor);
+		}
+	
+		else if(e instanceof OP) //TODO classe Op
+		{
+			System.out.print(e.valor);
+		}
+
+		else if(e instanceof Func) 
+		{
+			System.out.print("function");
+			pretty_printer(e.returnType);
+			System.out.print(e.name);
+			System.out.print("(");
+			for (Var arg:e.args ) {
+				pretty_printer(arg);
+			}
+			System.out.print(")");
+			System.out.print("{");
+			for (Var var:e.vars ) {
+				pretty_printer(var);
+			}
+			for (Var com:e.comandos ) {
+				pretty_printer(com);
+			}
+			System.out.print("}");
+		}
+	}
+}
+
+
+public class Lugosi {
+	private Main main_func;
+	private ArrayList<Func> funcs;
+
+	public Lugosi(Main main_func, ArrayList<Func> funcs){
+		this.main_func = main_func;
+		this.funcs = new ArrayList(funcs);
+	}
 }
 
 public class Func {
 
-  private Type returnType;
-  private String name;
-  private ArrayList<Var> args;
-  private ArrayList<Var> vars;
-  private ArrayList<Comamand> comandos;
+	private Type returnType;
+	private String name;
+	private ArrayList<Var> args;
+	private ArrayList<Var> vars;
+	private ArrayList<Command> comandos;
 
-  public Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> comandos){
-    this.returnType = returnType;
-    this.name = name;
-    this.args = new ArrayList(args);
-    this.vars = new ArrayList(vars);
-    this.comandos = ArrayList(comandos);
-  }
+	public Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> comandos){
+		this.returnType = returnType;
+		this.name = name;
+		this.args = new ArrayList(args);
+		this.vars = new ArrayList(vars);
+		this.comandos = ArrayList(comandos);
+	}
 
 }
 
 public class Main extends Func {
 
-  public Main(List<Var> vars, List<Command> commands){
-    super(
-      new Int(),
-      "main",
-      new ArrayList(),
-      new ArrayList(vars),
-      new ArrayList(commands)
-    );
-  }
+	public Main(List<Var> vars, List<Command> commands){
+		super(
+			new Int(),
+			"main",
+			new ArrayList(),
+			new ArrayList(vars),
+			new ArrayList(commands)
+		);
+	}
 
 }
 
 
 public class Var {
-  private Type type;
-  private ID id;
+	private Type type;
+	private ID id;
 
-  public Var(String type, ID id){
-    this.type = type;
-    this.id = id;
-  }
+	public Var(String type, ID id){
+		this.type = type;
+		this.id = id;
+	}
 }
 
 //--- Comandos
@@ -63,51 +313,51 @@ public class Var {
 public abstract class Command {}
 
 public class Atrib extends Command {
-  ID id;
-  Exp exp;
+	ID id;
+	Exp exp;
 
-  public Atrib (Id id, Exp exp){
-    this.id = id;
-    this.exp = exp;
-  }
+	public Atrib (Id id, Exp exp){
+		this.id = id;
+		this.exp = exp;
+	}
 
 }
 
 //Chamada de função
 
 public class functionCall extends Command {
-  ID id;
-  ArrayList<Exp> args;
+	ID id;
+	ArrayList<Exp> args;
 
-  public functionCall(Id id, ArrayList<Exp> args){
-    this.id = id;
-    this.args = args;
-  }
+	public functionCall(Id id, ArrayList<Exp> args){
+		this.id = id;
+		this.args = args;
+	}
 }
 
 
 //If
 public class If extends Command {
-  //Condition
-  Exp exp;
-  ArrayList<Command> comandos;
+	//Condition
+	Exp exp;
+	ArrayList<Command> comandos;
 
-  public If (Exp exp, ArrayList<Command> comandos) {
-    this.exp = exp;
-    this.comandos = comandos;
-  }
+	public If (Exp exp, ArrayList<Command> comandos) {
+		this.exp = exp;
+		this.comandos = comandos;
+	}
 
 }
 
 //While
 public class While extends Command {
-  Exp exp;
-  ArrayList<Command> comandos;
+	Exp exp;
+	ArrayList<Command> comandos;
 
-  public While (Exp exp, ArrayList<Command> comandos) {
-    this.exp = exp;
-    this.comandos = comandos;
-  }
+	public While (Exp exp, ArrayList<Command> comandos) {
+		this.exp = exp;
+		this.comandos = comandos;
+	}
 
 }
 
@@ -116,21 +366,21 @@ public class DoWhile extends While {}
 
 //Return
 public class Return extends Command {
-  private Exp exp;
+	private Exp exp;
 
 public Return (Exp exp) {
-  this.exp = exp;
+	this.exp = exp;
 }
 
 }
 
 //Print
 public class Print extends Command {
-  Exp exp;
+	Exp exp;
 
-  public Print (Exp exp) {
-    this.exp = exp;
-  }
+	public Print (Exp exp) {
+		this.exp = exp;
+	}
 
 }
 
@@ -151,36 +401,36 @@ public class Bool extends Type{}
 
 //ID
 public class ID {
-  String nome;
+	String nome;
 
-  public ID (String nome) {
-    this.nome = nome;
-  }
+	public ID (String nome) {
+		this.nome = nome;
+	}
 
 }
 
 //NUM
 public class NUM {
-  String valor;
+	String valor;
 
-  public NUM (String valor){this.valor=valor;}
+	public NUM (String valor){this.valor=valor;}
 
 }
 
 public class Bool {
-  String valor;
-  public Bool(String valor){this.valor=valor;}
+	String valor;
+	public Bool(String valor){this.valor=valor;}
 }
 //---- Exp
 
-public class Exp extends ExpBase{
-  private ExpBase exp1;
-  private Op op;
-  private ExpBase exp1;
+public class Exp extends ExpBase{ //TODO expbase nao existe mais
+	private ExpBase exp1;
+	private Op op;
+	private ExpBase exp1;
 }
 
 public class Fator extends ExpBase {
-  
+	
 }
 
 //Base
@@ -188,25 +438,25 @@ public abstract class Exp {}
 
 //Exp op Exp
 class ExpOpExp extends Exp {
-  Exp exp1;
-  String op;
-  Exp exp2;
+	Exp exp1;
+	String op;
+	Exp exp2;
 
-  public ExpOpExp (Exp exp1, String op, Exp exp2) { 
-    this.exp1 = exp1;
-    this.op = op;
-    this.exp2 = exp2;
-  }
+	public ExpOpExp (Exp exp1, String op, Exp exp2) { 
+		this.exp1 = exp1;
+		this.op = op;
+		this.exp2 = exp2;
+	}
 
 }
 
 //Fator
 class ExpFator extends Exp {
-  Fator fator;
+	Fator fator;
 
-  public ExpFator (Fator fator) {
-    this.fator = fator;
-  }
+	public ExpFator (Fator fator) {
+		this.fator = fator;
+	}
 
 }
 
@@ -215,44 +465,44 @@ public abstract class Fator {}
 
 //Fator = id
 class FatorId extends Fator {
-  ID id;
+	ID id;
 
-  public FatorId (Id id){
-    this.id = id;
-  }
+	public FatorId (Id id){
+		this.id = id;
+	}
 
 }
 
 //Fator = id (lista)
 class FatorIdLista extends Fator {
-  ID id;
-  ArrayList<Exp> exp;
+	ID id;
+	ArrayList<Exp> exp;
 
-  public FatorIdLista (Id id, ArrayList<Exp> exp){
-    this.id = id;
-    this.exp = exp;
-  }
+	public FatorIdLista (Id id, ArrayList<Exp> exp){
+		this.id = id;
+		this.exp = exp;
+	}
 
 }
 
 //Fator = num
 class FatorNum extends Fator {
-  NUM num;
-  
-  public FatorNum (NUM num) {
-    this.num = num;
-  }
+	NUM num;
+	
+	public FatorNum (NUM num) {
+		this.num = num;
+	}
 
 }
 
 
 //Fator = bool
 class FatorBool extends Fator {
-  Bool valor;
+	Bool valor;
 
-  public FatorBool (Bool valor){
-    this.valor = valor;
-  }
+	public FatorBool (Bool valor){
+		this.valor = valor;
+	}
 }
 
 
@@ -261,7 +511,7 @@ PARSER_END(Lugosi)
 
 SKIP :
 {
-  " "
+	" "
 | "\t"
 | "\n"
 | "\r"
@@ -269,7 +519,7 @@ SKIP :
 
 TOKEN :
 {
-  <MAIN: "main">
+	<MAIN: "main">
 | <VAR: "var">
 | <ACHAVES: "{">
 | <FCHAVES: "}">
@@ -293,7 +543,7 @@ TOKEN :
 
 TOKEN :
 {
-  <OP: ("+" | "-" | "*" | "/" | "&&" | "||" | "<" | ">" | "==" | "!=")>
+	<OP: ("+" | "-" | "*" | "/" | "&&" | "||" | "<" | ">" | "==" | "!=")>
 | <ID: ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z","0"-"9"])* ("_"(["a"-"z","A"-"Z","0"-"9"])+)?>
 | <NUMERO: (["0"-"9"])+("."(["0"-"9"])+)?>
 }
@@ -301,94 +551,94 @@ TOKEN :
 void SeqComandos():
 {ArrayList<Command> comandos = new ArrayList<>(); }
 {
-  ( { comandos.add(Comando()); } )*
+	( { comandos.add(Comando()); } )*
 
-  {return comandos;}
+	{return comandos;}
 }
 
 void Comando():
 {Command c = null; ID id; Token t; Exp e1; Exp e2; ArrayList<Command> comandos; }
 {
-  (
-      ( t=<ID> {id = new ID(t.image);} ((<ATRIB> { c = new Atrib(id, Exp()); } ) | (<APARENTESES>  { c = new functionCall(id, ListaExp()); } <FPARENTESES>)) )
-    | ( <IF> <APARENTESES> {e1 = Exp();} <FPARENTESES> <ACHAVES> { c = new If (e1, SeqComandos()); } <FCHAVES> )
-    | ( <WHILE> <APARENTESES> {e1 = Exp(); } <FPARENTESES> <ACHAVES> {c = new While(e1, SeqComandos()); } <FCHAVES> )
-    | ( <DO> <ACHAVES> { comandos = SeqComandos(); } <FCHAVES> <WHILE> <APARENTESES> { c = new DoWhile(comandos, Exp()); }  <FPARENTESES> )
-    | ( <PRINT> <APARENTESES> { c = new Print(Exp()); } <FPARENTESES>)
-    | ( <RETURN> { c = new Return (Exp()); }) 
-  )
-  <PVIRGULA>
+	(
+			( t=<ID> {id = new ID(t.image);} ((<ATRIB> { c = new Atrib(id, Exp()); } ) | (<APARENTESES>  { c = new functionCall(id, ListaExp()); } <FPARENTESES>)) )
+		| ( <IF> <APARENTESES> {e1 = Exp();} <FPARENTESES> <ACHAVES> { c = new If (e1, SeqComandos()); } <FCHAVES> )
+		| ( <WHILE> <APARENTESES> {e1 = Exp(); } <FPARENTESES> <ACHAVES> {c = new While(e1, SeqComandos()); } <FCHAVES> )
+		| ( <DO> <ACHAVES> { comandos = SeqComandos(); } <FCHAVES> <WHILE> <APARENTESES> { c = new DoWhile(comandos, Exp()); }  <FPARENTESES> )
+		| ( <PRINT> <APARENTESES> { c = new Print(Exp()); } <FPARENTESES>)
+		| ( <RETURN> { c = new Return (Exp()); }) 
+	)
+	<PVIRGULA>
 
-  {return c;}
+	{return c;}
 }
 
-Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> commands)
+Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> commands) //TODO ????
 
 void Func ():
 { ArrayLis<Func> functions = new ArrayList<>(); Type returnType; String name;  ArrayList<Var> args; ArrayList<Var> vars; ArrayList<Command> comandos; Token token; }
 {
 
-  (<FUNCTION> {returnType = Tipo();} t=<ID> <APARENTESES> { args = VarDecl(); } <FPARENTESES> <ACHAVES> {vars = VarDecl();} {comandos = SeqComandos();} <FCHAVES> {functions.add(new Func(returnType, t.image, args, vars, comandos));})*
+	(<FUNCTION> {returnType = Tipo();} t=<ID> <APARENTESES> { args = VarDecl(); } <FPARENTESES> <ACHAVES> {vars = VarDecl();} {comandos = SeqComandos();} <FCHAVES> {functions.add(new Func(returnType, t.image, args, vars, comandos));})*
 
-  {return functions;}
+	{return functions;}
 
 }
 
 void Exp():
 {Exp retorno;Exp e1=null;Exp e2=null;Token t;}
 {
-  
-    (<APARENTESES> e1=Exp() t=<OP> e2=Exp() <FPARENTESES> {retorno = new ExpOpExp(e1,t.image,e2);}) | (retorno=Fator())
-  
-  {return retorno;}
+	
+		(<APARENTESES> e1=Exp() t=<OP> e2=Exp() <FPARENTESES> {retorno = new ExpOpExp(e1,t.image,e2);}) | (retorno=Fator())
+	
+	{return retorno;}
 }
 
 void Fator():
 {ExpFator expF=null;ID id=null;ArrayList<Exp> l = new ArrayList<>();Token t;}
 {
-  
-    (t=<ID> {id=new ID(t.image);} (<APARENTESES> (l=ListaExp())?  <FPARENTESES>)? {expF = new FatorIdLista(id,l)})
-  | (t=<NUMERO> {expF = new FatorNum(t.image);})
-  | (t=<TRUE>   {expF = new FatorBool(t.image);})
-  | (t=<FALSE>  {expF = new FatorBool(t.image);})
-  
-  {return expF;}
+	
+		(t=<ID> {id=new ID(t.image);} (<APARENTESES> (l=ListaExp())?  <FPARENTESES>)? {expF = new FatorIdLista(id,l)})
+	| (t=<NUMERO> {expF = new FatorNum(t.image);})
+	| (t=<TRUE>   {expF = new FatorBool(t.image);})
+	| (t=<FALSE>  {expF = new FatorBool(t.image);})
+	
+	{return expF;}
 }
 
 void ListaExp():
 {ArrayList<Exp> retorno = new ArrayList<>();}
 {
-  {retorno.add(Exp())} (<VIRGULA> {retorno.add(Exp())})*
+	{retorno.add(Exp())} (<VIRGULA> {retorno.add(Exp())})*
 
-  {return retorno;}
+	{return retorno;}
 }
 
 void Tipo():
 {Type type = null; Token t;}
 {
-  (
-      (t=<INT> { type = new NUM(t.image); }) 
-    | (t=<BOOL> { type = new Bool(t.image); })
-  )
-  {return type;}
+	(
+			(t=<INT> { type = new NUM(t.image); }) 
+		| (t=<BOOL> { type = new Bool(t.image); })
+	)
+	{return type;}
 }
 
 void VarDecl():
 { ArrayList<Var> lista_var = new ArrayList<>(); Type type=null; ID id=null; Token t;}
 {
-  ( <VAR> { type=Tipo(); } t=<ID> { id = new ID(t.image); } <PVIRGULA> { lista_var.add(new Var(type, id)); } )*
-  {return lista_var;}
+	( <VAR> { type=Tipo(); } t=<ID> { id = new ID(t.image); } <PVIRGULA> { lista_var.add(new Var(type, id)); } )*
+	{return lista_var;}
 }
 
 void Lugosi () :
 {Main main; ArrayList<Func> functions;}
 {
 
-  (main = Main())
-  (functions = Func())
-  <EOF>
+	(main = Main())
+	(functions = Func())
+	<EOF>
 
-  { return (new Lugosi (main, functions)); }
+	{ return (new Lugosi (main, functions)); }
 }
 
 void Main ():
@@ -404,8 +654,3 @@ void Main ():
  {return (new Main (lista_var, comandos));}
 
 }
-
-
-
-
-
