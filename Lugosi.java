@@ -177,7 +177,7 @@ import java.util.ArrayList;
 			System.out.print(")");
 		}
 
-		else if(e instanceof (ExpFator))
+		else if(e instanceof (Fator))
 		{
 			pretty_printer(e.fator);
 		}
@@ -244,7 +244,7 @@ import java.util.ArrayList;
 }
 */
 
-public class Lugosi implements LugosiConstants {
+class Lugosi implements LugosiConstants {
         private Main main_func;
         private ArrayList<Func> funcs;
 
@@ -255,13 +255,16 @@ public class Lugosi implements LugosiConstants {
 
   public static void main(String args[]) throws ParseException,IOException {
 
-                Lugosi parser = new Lugosi(new FileInputStream(args[0])); //TODO tem q ter outro nome, lugosi tem que ser a regra incial
-                Object e = parser.Lugosi();
-                pretty_printer(e);
+                Lugosi parser = new Lugosi(new FileInputStream(args[0]));
+                parser.Lugosi();
+                //pretty_printer(e);
+        //System.println("Teste");
+
+                return;
 
         }
 
-  static final public void SeqComandos() throws ParseException {
+  static final public ArrayList<Command> SeqComandos() throws ParseException {
  Command c; ArrayList<Command> comandos = new ArrayList<Command>();
     label_1:
     while (true) {
@@ -282,9 +285,10 @@ public class Lugosi implements LugosiConstants {
                        comandos.add(c);
     }
          {if (true) return comandos;}
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void Comando() throws ParseException {
+  static final public Command Comando() throws ParseException {
  Command c = null; ID id; Token t; Exp e1; Exp e2; ArrayList<Command> comandos;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ID:
@@ -331,7 +335,7 @@ public class Lugosi implements LugosiConstants {
       jj_consume_token(FCHAVES);
       jj_consume_token(WHILE);
       jj_consume_token(APARENTESES);
-                                                                                                   c = new DoWhile(comandos, Exp());
+                                                                                                   c = new DoWhile(Exp(), comandos);
       jj_consume_token(FPARENTESES);
       break;
     case PRINT:
@@ -351,10 +355,11 @@ public class Lugosi implements LugosiConstants {
     }
     jj_consume_token(PVIRGULA);
          {if (true) return c;}
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void Func() throws ParseException {
-  ArrayLis<Func> functions = new ArrayList<Func>(); Type returnType; String name;  ArrayList<Var> args; ArrayList<Var> vars; ArrayList<Command> comandos; Token token;
+  static final public ArrayList<Func> Func() throws ParseException {
+  ArrayList<Func> functions = new ArrayList<Func>(); Type returnType; String name;  ArrayList<Var> args; ArrayList<Var> vars; ArrayList<Command> comandos; Token t;
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -378,9 +383,10 @@ public class Lugosi implements LugosiConstants {
                                                                                                                                                                          functions.add(new Func(returnType, t.image, args, vars, comandos));
     }
          {if (true) return functions;}
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void Exp() throws ParseException {
+  static final public Exp Exp() throws ParseException {
  Exp retorno;Exp e1=null;Exp e2=null;Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case APARENTESES:
@@ -403,10 +409,11 @@ public class Lugosi implements LugosiConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void Fator() throws ParseException {
- ExpFator expF=null;ID id=null;ArrayList<Exp> l = new ArrayList<Exp>();Token t;
+  static final public Fator Fator() throws ParseException {
+ Fator expF=null;ID id=null;ArrayList<Exp> l = new ArrayList<Exp>();Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ID:
       t = jj_consume_token(ID);
@@ -415,36 +422,32 @@ public class Lugosi implements LugosiConstants {
       case APARENTESES:
         jj_consume_token(APARENTESES);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case FPARENTESES:
         case VIRGULA:
           l = ListaExp();
-          jj_consume_token(FPARENTESES);
-          break;
-          jj_consume_token(FPARENTESES);
           break;
         default:
           jj_la1[5] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
+          ;
         }
+        jj_consume_token(FPARENTESES);
         break;
       default:
         jj_la1[6] = jj_gen;
         ;
       }
-                                                                                                                  expF = new FatorIdLista(id,l);
+                                                                                                expF = new FatorIdLista(id,l);
       break;
     case NUMERO:
       t = jj_consume_token(NUMERO);
-                       expF = new FatorNum(t.image);
+                       expF = new FatorNum(new NUM(t.image));
       break;
     case TRUE:
       t = jj_consume_token(TRUE);
-                       expF = new FatorBool(t.image);
+                       expF = new FatorBool(new Bool(t.image));
       break;
     case FALSE:
       t = jj_consume_token(FALSE);
-                       expF = new FatorBool(t.image);
+                       expF = new FatorBool(new Bool(t.image));
          {if (true) return expF;}
       break;
     default:
@@ -452,13 +455,16 @@ public class Lugosi implements LugosiConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void ListaExp() throws ParseException {
+  static final public ArrayList<Exp> ListaExp() throws ParseException {
  ArrayList<Exp> retorno = new ArrayList<Exp>();
-         retorno.add(Exp());
+          retorno.add(Exp());
     label_3:
     while (true) {
+      jj_consume_token(VIRGULA);
+                                           retorno.add(Exp());
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case VIRGULA:
         ;
@@ -467,22 +473,21 @@ public class Lugosi implements LugosiConstants {
         jj_la1[8] = jj_gen;
         break label_3;
       }
-      jj_consume_token(VIRGULA);
-                                          retorno.add(Exp());
     }
          {if (true) return retorno;}
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void Tipo() throws ParseException {
+  static final public Type Tipo() throws ParseException {
  Type type = null; Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INT:
       t = jj_consume_token(INT);
-                                   type = new NUM(t.image);
+                              type = new IntType();
       break;
     case BOOL:
       t = jj_consume_token(BOOL);
-                              type = new Bool(t.image);
+                              type = new BoolType();
       break;
     default:
       jj_la1[9] = jj_gen;
@@ -490,9 +495,10 @@ public class Lugosi implements LugosiConstants {
       throw new ParseException();
     }
          {if (true) return type;}
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void VarDecl() throws ParseException {
+  static final public ArrayList<Var> VarDecl() throws ParseException {
   ArrayList<Var> lista_var = new ArrayList<Var>(); Type type=null; ID id=null; Token t;
     label_4:
     while (true) {
@@ -512,17 +518,19 @@ public class Lugosi implements LugosiConstants {
                                                                                lista_var.add(new Var(type, id));
     }
          {if (true) return lista_var;}
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void Lugosi() throws ParseException {
+  static final public Lugosi Lugosi() throws ParseException {
  Main main; ArrayList<Func> functions;
     main = Main();
     functions = Func();
     jj_consume_token(0);
           {if (true) return (new Lugosi (main, functions));}
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void Main() throws ParseException {
+  static final public Main Main() throws ParseException {
  ArrayList<Var> lista_var; ArrayList<Command> comandos;
     jj_consume_token(MAIN);
     jj_consume_token(ACHAVES);
@@ -530,6 +538,7 @@ public class Lugosi implements LugosiConstants {
    comandos = SeqComandos();
     jj_consume_token(FCHAVES);
   {if (true) return (new Main (lista_var, comandos));}
+    throw new Error("Missing return statement in function");
   }
 
   static private boolean jj_initialized_once = false;
@@ -548,7 +557,7 @@ public class Lugosi implements LugosiConstants {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x41e8000,0x200200,0x41e8000,0x400000,0xd800200,0xc00,0x200,0xd800000,0x800,0x6000,0x40,};
+      jj_la1_0 = new int[] {0x41e8000,0x200200,0x41e8000,0x400000,0xd800200,0x800,0x200,0xd800000,0x800,0x6000,0x40,};
    }
 
   /** Constructor with InputStream. */
@@ -724,7 +733,7 @@ public class Lugosi implements LugosiConstants {
 
 }
 
-public class Func {
+class Func {
 
         private Type returnType;
         private String name;
@@ -732,21 +741,21 @@ public class Func {
         private ArrayList<Var> vars;
         private ArrayList<Command> comandos;
 
-        public Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> comandos){
+        public Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Command> comandos){
                 this.returnType = returnType;
                 this.name = name;
                 this.args = new ArrayList(args);
                 this.vars = new ArrayList(vars);
-                this.comandos = ArrayList(comandos);
+                this.comandos = new ArrayList(comandos);
         }
 
 }
 
-public class Main extends Func {
+class Main extends Func {
 
-        public Main(List<Var> vars, List<Command> commands){
+        public Main(ArrayList<Var> vars, ArrayList<Command> commands){
                 super(
-                        new Int(),
+                        new IntType(),
                         "main",
                         new ArrayList(),
                         new ArrayList(vars),
@@ -757,11 +766,11 @@ public class Main extends Func {
 }
 
 
-public class Var {
+class Var {
         private Type type;
         private ID id;
 
-        public Var(String type, ID id){
+        public Var(Type type, ID id){
                 this.type = type;
                 this.id = id;
         }
@@ -769,13 +778,13 @@ public class Var {
 
 //--- Comandos
 
-public abstract class Command {}
+abstract class Command {}
 
-public class Atrib extends Command {
+class Atrib extends Command {
         ID id;
         Exp exp;
 
-        public Atrib (Id id, Exp exp){
+        public Atrib (ID id, Exp exp){
                 this.id = id;
                 this.exp = exp;
         }
@@ -784,11 +793,11 @@ public class Atrib extends Command {
 
 //Chamada de função
 
-public class functionCall extends Command {
+class functionCall extends Command {
         ID id;
         ArrayList<Exp> args;
 
-        public functionCall(Id id, ArrayList<Exp> args){
+        public functionCall(ID id, ArrayList<Exp> args){
                 this.id = id;
                 this.args = args;
         }
@@ -796,7 +805,7 @@ public class functionCall extends Command {
 
 
 //If
-public class If extends Command {
+class If extends Command {
         //Condition
         Exp exp;
         ArrayList<Command> comandos;
@@ -809,7 +818,7 @@ public class If extends Command {
 }
 
 //While
-public class While extends Command {
+class While extends Command {
         Exp exp;
         ArrayList<Command> comandos;
 
@@ -821,10 +830,16 @@ public class While extends Command {
 }
 
 //Do While
-public class DoWhile extends While {}
+class DoWhile extends While {
+
+  public DoWhile (Exp exp, ArrayList<Command> comandos){
+    super(exp, comandos);
+  }
+
+}
 
 //Return
-public class Return extends Command {
+class Return extends Command {
         private Exp exp;
 
 public Return (Exp exp) {
@@ -834,7 +849,7 @@ public Return (Exp exp) {
 }
 
 //Print
-public class Print extends Command {
+class Print extends Command {
         Exp exp;
 
         public Print (Exp exp) {
@@ -845,21 +860,19 @@ public class Print extends Command {
 
 // ----------------------------------
 
-public class Indexing extends Command {}
+class Indexing extends Command {}
 
 
 //----- Types
 
-public abstract class Type {}
-
-public class Int extends Type{}
-
-public class Bool extends Type{}
+abstract class Type {}
+class BoolType extends Type {}
+class IntType extends Type {}
 
 // -----------------------------------
 
 //ID
-public class ID {
+class ID {
         String nome;
 
         public ID (String nome) {
@@ -869,31 +882,23 @@ public class ID {
 }
 
 //NUM
-public class NUM {
+class NUM {
         String valor;
 
         public NUM (String valor){this.valor=valor;}
 
 }
 
-public class Bool {
+class Bool {
         String valor;
         public Bool(String valor){this.valor=valor;}
 }
 //---- Exp
 
-public class Exp extends ExpBase{ //TODO expbase nao existe mais
-        private ExpBase exp1;
-        private Op op;
-        private ExpBase exp1;
-}
-
-public class Fator extends ExpBase {
-
-}
+class Fator extends Exp {}
 
 //Base
-public abstract class Exp {}
+abstract class Exp {}
 
 //Exp op Exp
 class ExpOpExp extends Exp {
@@ -910,23 +915,14 @@ class ExpOpExp extends Exp {
 }
 
 //Fator
-class ExpFator extends Exp {
-        Fator fator;
 
-        public ExpFator (Fator fator) {
-                this.fator = fator;
-        }
 
-}
-
-//Fator base
-public abstract class Fator {}
 
 //Fator = id
 class FatorId extends Fator {
         ID id;
 
-        public FatorId (Id id){
+        public FatorId (ID id){
                 this.id = id;
         }
 
@@ -937,7 +933,7 @@ class FatorIdLista extends Fator {
         ID id;
         ArrayList<Exp> exp;
 
-        public FatorIdLista (Id id, ArrayList<Exp> exp){
+        public FatorIdLista (ID id, ArrayList<Exp> exp){
                 this.id = id;
                 this.exp = exp;
         }
