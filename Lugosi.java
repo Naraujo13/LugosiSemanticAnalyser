@@ -2,19 +2,267 @@
 import java.io.*;
 import java.util.ArrayList;
 
-public class Lugosi implements LugosiConstants {
+/*
+//TODO classe lugosi
 
-  private Main main;
-  private ArrayList<Func> funcs;
+	static void pretty_printer()
+	{
+
+		if(e instanceof (Lugosi))
+		{
+			pretty_printer(e.main_func);
+			ArrayList<Func> functions = e.funcs;
+			for(Func func : functions){
+				pretty_printer(func);
+			}
+
+		}
+		else if(e instanceof (Main))
+		{
+			System.out.print("main");
+			System.out.print("{");
+			ArrayList<Var> vardecl = e.vars;
+			for(Var var : vardecl){
+				pretty_printer(var);
+			}
+
+			ArrayList<Comamand> seqcomandos = e.comandos;
+			for(Comamand com : seqcomandos){
+				pretty_printer(com);
+			}
+			System.out.print("}");
+		}
+
+		else if(e instanceof (Var))
+		{
+			System.out.print("var");
+
+			pretty_printer(e.type);
+
+			pretty_printer(e.id);
+
+			System.out.print(";");
+		}
+
+		else if(e instanceof (Int)) //TODO arrumar a parte do Type
+		{
+			System.out.print("int");
+		}
+
+		else if(e instanceof (Bool))
+		{
+			System.out.print("bool");
+		
+		}
+
+		else if(e instanceof (Atrib))
+		{
+			pretty_printer(e.id);
+			System.out.print(":=");
+			pretty_printer(e.exp);
+			System.out.print(";");
+		}
+
+		else if(e instanceof (functionCall))
+		{
+			pretty_printer(e.id);
+			System.out.print("(");
+
+			for(Exp exp: e.args) {
+				pretty_printer(exp);
+			}
+
+			System.out.print(")");
+		
+			System.out.print(";");
+		}
+
+		else if(e instanceof (If))
+		{
+			
+			System.out.print("if");
+			System.out.print("(");
+
+			
+			pretty_printer(e.exp);
+			
+
+			System.out.print(")");
+		
+			System.out.print("{");
+
+			for(Command com: e.comandos) {
+				pretty_printer(com);
+			}
+
+			System.out.print("}");
+		
+			System.out.print(";");
+		}
+	
+		else if (e instanceof (While))
+		{
+			System.out.print("while");
+			System.out.print("(");
+
+			
+			pretty_printer(e.exp);
+			
+
+			System.out.print(")");
+			System.out.print("{");
+			System.out.print("do");
+
+			for(Command com: e.comandos) {
+				pretty_printer(com);
+			}
+
+			System.out.print("}");
+		
+			System.out.print(";");
+				
+		}
+
+		else if (e instanceof (DoWhile))
+		{
+			
+			System.out.print("{");
+			System.out.print("do");
+
+			for(Command com: e.comandos) {
+				pretty_printer(com);
+			}
+
+			System.out.print("}");
+
+			System.out.print("while");
+			System.out.print("(");
+
+			
+			pretty_printer(e.exp);
+			
+
+			System.out.print(")");
+		
+			System.out.print(";");
+		}
+
+		else if (e instanceof (Return))
+		{
+			System.out.print("Return");
+			pretty_printer(e.exp);
+			System.out.print(";")
+
+		}
+		else if(e instanceof (Print))
+		{
+			System.out.print("Return");
+			System.out.print("(");
+
+			pretty_printer(e.exp);
+
+			System.out.print(")");
+			System.out.print(";")
+
+		}
+
+		else if(e instanceof (ExpOpExp))
+		{
+			System.out.print("(");
+
+			pretty_printer(e.exp1);
+			pretty_printer(e.op);
+			pretty_printer(e.exp2);
+
+			System.out.print(")");
+		}
+
+		else if(e instanceof (ExpFator))
+		{
+			pretty_printer(e.fator);
+		}
+
+		else if(e instanceof (FatorId))
+		{
+			pretty_printer(e.id);
+		}
+
+		else if(e instanceof (FatorIdLista))
+		{
+			pretty_printer(e.id);
+			System.out.print("(");
+
+			for (Exp expression: e.exp) {
+				pretty_printer(expression);
+			}
+			System.out.print(")");
+
+		}
+
+		else if(e instanceof (FatorNum))
+		{
+			pretty_printer(e.num);
+		}
+		else if(e instanceof NUM)
+		{
+			System.out.print(e.valor);
+		}
+		else if(e instanceof FatorBool)
+		{
+			pretty_printer(e.valor)
+		}
+		else if(e instanceof Bool)
+		{
+			System.out.print(e.valor);
+		}
+	
+		else if(e instanceof OP) //TODO classe Op
+		{
+			System.out.print(e.valor);
+		}
+
+		else if(e instanceof Func) 
+		{
+			System.out.print("function");
+			pretty_printer(e.returnType);
+			System.out.print(e.name);
+			System.out.print("(");
+			for (Var arg:e.args ) {
+				pretty_printer(arg);
+			}
+			System.out.print(")");
+			System.out.print("{");
+			for (Var var:e.vars ) {
+				pretty_printer(var);
+			}
+			for (Var com:e.comandos ) {
+				pretty_printer(com);
+			}
+			System.out.print("}");
+		}
+	}
+}
+*/
+
+public class Lugosi implements LugosiConstants {
+        private Main main_func;
+        private ArrayList<Func> funcs;
+
+        public Lugosi(Main main_func, ArrayList<Func> funcs){
+                this.main_func = main_func;
+                this.funcs = new ArrayList(funcs);
+        }
 
   public static void main(String args[]) throws ParseException,IOException {
 
-    Lugosi parser = new Lugosi(new FileInputStream(args[0]));
-    parser.Lugosi();
+                Lugosi parser = new Lugosi(new FileInputStream(args[0])); //TODO tem q ter outro nome, lugosi tem que ser a regra incial
+                Object e = parser.Lugosi();
+                pretty_printer(e);
 
-  }
+        }
 
   static final public void SeqComandos() throws ParseException {
+ Command c; ArrayList<Command> comandos = new ArrayList<Command>();
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -30,37 +278,30 @@ public class Lugosi implements LugosiConstants {
         jj_la1[0] = jj_gen;
         break label_1;
       }
-      Comando();
+      c = Comando();
+                       comandos.add(c);
     }
+         {if (true) return comandos;}
   }
 
   static final public void Comando() throws ParseException {
+ Command c = null; ID id; Token t; Exp e1; Exp e2; ArrayList<Command> comandos;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ID:
-      jj_consume_token(ID);
+      t = jj_consume_token(ID);
+                                  id = new ID(t.image);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case ATRIB:
         jj_consume_token(ATRIB);
-        Exp();
+                                                                     c = new Atrib(id, Exp());
         break;
       case APARENTESES:
         jj_consume_token(APARENTESES);
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case APARENTESES:
-        case TRUE:
-        case FALSE:
-        case ID:
-        case NUMERO:
-          ListaExp();
-          break;
-        default:
-          jj_la1[1] = jj_gen;
-          ;
-        }
+                                                                                                                       c = new functionCall(id, ListaExp());
         jj_consume_token(FPARENTESES);
         break;
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[1] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -68,115 +309,143 @@ public class Lugosi implements LugosiConstants {
     case IF:
       jj_consume_token(IF);
       jj_consume_token(APARENTESES);
-      Exp();
+                                        e1 = Exp();
       jj_consume_token(FPARENTESES);
       jj_consume_token(ACHAVES);
-      SeqComandos();
+                                                                               c = new If (e1, SeqComandos());
       jj_consume_token(FCHAVES);
       break;
     case WHILE:
       jj_consume_token(WHILE);
       jj_consume_token(APARENTESES);
-      Exp();
+                                           e1 = Exp();
       jj_consume_token(FPARENTESES);
       jj_consume_token(ACHAVES);
-      SeqComandos();
+                                                                                  c = new While(e1, SeqComandos());
       jj_consume_token(FCHAVES);
       break;
     case DO:
       jj_consume_token(DO);
       jj_consume_token(ACHAVES);
-      SeqComandos();
+                                     comandos = SeqComandos();
       jj_consume_token(FCHAVES);
       jj_consume_token(WHILE);
       jj_consume_token(APARENTESES);
-      Exp();
+                                                                                                   c = new DoWhile(comandos, Exp());
       jj_consume_token(FPARENTESES);
       break;
     case PRINT:
       jj_consume_token(PRINT);
       jj_consume_token(APARENTESES);
-      Exp();
+                                            c = new Print(Exp());
       jj_consume_token(FPARENTESES);
       break;
     case RETURN:
       jj_consume_token(RETURN);
-      Exp();
+                               c = new Return (Exp());
       break;
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[2] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
     jj_consume_token(PVIRGULA);
+         {if (true) return c;}
   }
 
   static final public void Func() throws ParseException {
+  ArrayLis<Func> functions = new ArrayList<Func>(); Type returnType; String name;  ArrayList<Var> args; ArrayList<Var> vars; ArrayList<Command> comandos; Token token;
     label_2:
     while (true) {
-      jj_consume_token(FUNCTION);
-      Tipo();
-      jj_consume_token(ID);
-      jj_consume_token(APARENTESES);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case INT:
-      case BOOL:
-        ListaArg();
-        break;
-      default:
-        jj_la1[4] = jj_gen;
-        ;
-      }
-      jj_consume_token(FPARENTESES);
-      jj_consume_token(ACHAVES);
-      VarDecl();
-      SeqComandos();
-      jj_consume_token(FCHAVES);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case FUNCTION:
         ;
         break;
       default:
-        jj_la1[5] = jj_gen;
+        jj_la1[3] = jj_gen;
         break label_2;
       }
+      jj_consume_token(FUNCTION);
+                     returnType = Tipo();
+      t = jj_consume_token(ID);
+      jj_consume_token(APARENTESES);
+                                                                  args = VarDecl();
+      jj_consume_token(FPARENTESES);
+      jj_consume_token(ACHAVES);
+                                                                                                               vars = VarDecl();
+                                                                                                                                   comandos = SeqComandos();
+      jj_consume_token(FCHAVES);
+                                                                                                                                                                         functions.add(new Func(returnType, t.image, args, vars, comandos));
     }
-  }
-
-  static final public void ListaArg() throws ParseException {
-    Tipo();
-    jj_consume_token(ID);
-    label_3:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case VIRGULA:
-        ;
-        break;
-      default:
-        jj_la1[6] = jj_gen;
-        break label_3;
-      }
-      jj_consume_token(VIRGULA);
-      Tipo();
-      jj_consume_token(ID);
-    }
+         {if (true) return functions;}
   }
 
   static final public void Exp() throws ParseException {
- Exp e1=null;Exp e2=null;Token t;
+ Exp retorno;Exp e1=null;Exp e2=null;Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case APARENTESES:
       jj_consume_token(APARENTESES);
-      Exp();
-      jj_consume_token(OP);
-      Exp();
+      e1 = Exp();
+      t = jj_consume_token(OP);
+      e2 = Exp();
       jj_consume_token(FPARENTESES);
+                                                                       retorno = new ExpOpExp(e1,t.image,e2);
       break;
     case TRUE:
     case FALSE:
     case ID:
     case NUMERO:
-      Fator();
+      retorno = Fator();
+         {if (true) return retorno;}
+      break;
+    default:
+      jj_la1[4] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void Fator() throws ParseException {
+ ExpFator expF=null;ID id=null;ArrayList<Exp> l = new ArrayList<Exp>();Token t;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case ID:
+      t = jj_consume_token(ID);
+                         id=new ID(t.image);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case APARENTESES:
+        jj_consume_token(APARENTESES);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case FPARENTESES:
+        case VIRGULA:
+          l = ListaExp();
+          jj_consume_token(FPARENTESES);
+          break;
+          jj_consume_token(FPARENTESES);
+          break;
+        default:
+          jj_la1[5] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+        break;
+      default:
+        jj_la1[6] = jj_gen;
+        ;
+      }
+                                                                                                                  expF = new FatorIdLista(id,l);
+      break;
+    case NUMERO:
+      t = jj_consume_token(NUMERO);
+                       expF = new FatorNum(t.image);
+      break;
+    case TRUE:
+      t = jj_consume_token(TRUE);
+                       expF = new FatorBool(t.image);
+      break;
+    case FALSE:
+      t = jj_consume_token(FALSE);
+                       expF = new FatorBool(t.image);
+         {if (true) return expF;}
       break;
     default:
       jj_la1[7] = jj_gen;
@@ -185,69 +454,23 @@ public class Lugosi implements LugosiConstants {
     }
   }
 
-  static final public void Fator() throws ParseException {
- ExpFator expF=null;ID id=null;ArrayList<Exp> l;Token t;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case ID:
-      t = jj_consume_token(ID);
-               id=new ID(t.image);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case APARENTESES:
-        jj_consume_token(APARENTESES);
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case APARENTESES:
-        case TRUE:
-        case FALSE:
-        case ID:
-        case NUMERO:
-          l = ListaExp();
-          break;
-        default:
-          jj_la1[8] = jj_gen;
-          ;
-        }
-        jj_consume_token(FPARENTESES);
-        break;
-      default:
-        jj_la1[9] = jj_gen;
-        ;
-      }
-      break;
-    case NUMERO:
-      t = jj_consume_token(NUMERO);
-                  expF = new FatorNum(t.image);
-      break;
-    case TRUE:
-      t = jj_consume_token(TRUE);
-                expF = new FatorBool(t.image);
-      break;
-    case FALSE:
-      t = jj_consume_token(FALSE);
-                 expF = new FatorBool(t.image);
-      break;
-    default:
-      jj_la1[10] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-   {if (true) return expF;}
-  }
-
   static final public void ListaExp() throws ParseException {
-    Exp();
-    label_4:
+ ArrayList<Exp> retorno = new ArrayList<Exp>();
+         retorno.add(Exp());
+    label_3:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case VIRGULA:
         ;
         break;
       default:
-        jj_la1[11] = jj_gen;
-        break label_4;
+        jj_la1[8] = jj_gen;
+        break label_3;
       }
       jj_consume_token(VIRGULA);
-      Exp();
+                                          retorno.add(Exp());
     }
+         {if (true) return retorno;}
   }
 
   static final public void Tipo() throws ParseException {
@@ -255,57 +478,58 @@ public class Lugosi implements LugosiConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INT:
       t = jj_consume_token(INT);
-                 type = new NUM(t.image);
+                                   type = new NUM(t.image);
       break;
     case BOOL:
       t = jj_consume_token(BOOL);
-                  type = new Bool(t.image);
+                              type = new Bool(t.image);
       break;
     default:
-      jj_la1[12] = jj_gen;
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
-   {if (true) return type;}
+         {if (true) return type;}
   }
 
   static final public void VarDecl() throws ParseException {
-    label_5:
+  ArrayList<Var> lista_var = new ArrayList<Var>(); Type type=null; ID id=null; Token t;
+    label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case VAR:
         ;
         break;
       default:
-        jj_la1[13] = jj_gen;
-        break label_5;
+        jj_la1[10] = jj_gen;
+        break label_4;
       }
       jj_consume_token(VAR);
-      Tipo();
-      jj_consume_token(ID);
+                  type=Tipo();
+      t = jj_consume_token(ID);
+                                          id = new ID(t.image);
       jj_consume_token(PVIRGULA);
+                                                                               lista_var.add(new Var(type, id));
     }
+         {if (true) return lista_var;}
   }
 
   static final public void Lugosi() throws ParseException {
-    Main();
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case FUNCTION:
-      Func();
-      break;
-    default:
-      jj_la1[14] = jj_gen;
-      ;
-    }
+ Main main; ArrayList<Func> functions;
+    main = Main();
+    functions = Func();
     jj_consume_token(0);
+          {if (true) return (new Lugosi (main, functions));}
   }
 
   static final public void Main() throws ParseException {
+ ArrayList<Var> lista_var; ArrayList<Command> comandos;
     jj_consume_token(MAIN);
     jj_consume_token(ACHAVES);
-    VarDecl();
-    SeqComandos();
+   lista_var = VarDecl();
+   comandos = SeqComandos();
     jj_consume_token(FCHAVES);
+  {if (true) return (new Main (lista_var, comandos));}
   }
 
   static private boolean jj_initialized_once = false;
@@ -318,13 +542,13 @@ public class Lugosi implements LugosiConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[15];
+  static final private int[] jj_la1 = new int[11];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x41e8000,0xd800200,0x200200,0x41e8000,0x6000,0x400000,0x800,0xd800200,0xd800200,0x200,0xd800000,0x800,0x6000,0x40,0x400000,};
+      jj_la1_0 = new int[] {0x41e8000,0x200200,0x41e8000,0x400000,0xd800200,0xc00,0x200,0xd800000,0x800,0x6000,0x40,};
    }
 
   /** Constructor with InputStream. */
@@ -345,7 +569,7 @@ public class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -359,7 +583,7 @@ public class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -376,7 +600,7 @@ public class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -386,7 +610,7 @@ public class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -402,7 +626,7 @@ public class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -411,7 +635,7 @@ public class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 15; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -467,7 +691,7 @@ public class Lugosi implements LugosiConstants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 11; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -502,45 +726,45 @@ public class Lugosi implements LugosiConstants {
 
 public class Func {
 
-  private Type returnType;
-  private String name;
-  private ArrayList<Var> args;
-  private ArrayList<Var> vars;
-  private ArrayList<Comamand> commands;
+        private Type returnType;
+        private String name;
+        private ArrayList<Var> args;
+        private ArrayList<Var> vars;
+        private ArrayList<Command> comandos;
 
-  public Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> commands){
-    this.returnType = returnType;
-    this.name = name;
-    this.args = new ArrayList(args);
-    this.vars = new ArrayList(vars);
-    this.commands = ArrayList(commands);
-  }
+        public Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> comandos){
+                this.returnType = returnType;
+                this.name = name;
+                this.args = new ArrayList(args);
+                this.vars = new ArrayList(vars);
+                this.comandos = ArrayList(comandos);
+        }
 
 }
 
 public class Main extends Func {
 
-  public Main(List<Var> vars, List<Command> commands){
-    super(
-      new Int(),
-      "main",
-      new ArrayList(),
-      new ArrayList(vars),
-      new ArrayList(commands)
-    );
-  }
+        public Main(List<Var> vars, List<Command> commands){
+                super(
+                        new Int(),
+                        "main",
+                        new ArrayList(),
+                        new ArrayList(vars),
+                        new ArrayList(commands)
+                );
+        }
 
 }
 
 
 public class Var {
-  private Type type;
-  private String value;
+        private Type type;
+        private ID id;
 
-  public Var(String type, String value){
-    this.type = type;
-    this.value = value;
-  }
+        public Var(String type, ID id){
+                this.type = type;
+                this.id = id;
+        }
 }
 
 //--- Comandos
@@ -548,23 +772,52 @@ public class Var {
 public abstract class Command {}
 
 public class Atrib extends Command {
-  ID id;
-  Exp exp;
+        ID id;
+        Exp exp;
+
+        public Atrib (Id id, Exp exp){
+                this.id = id;
+                this.exp = exp;
+        }
+
 }
+
+//Chamada de função
+
+public class functionCall extends Command {
+        ID id;
+        ArrayList<Exp> args;
+
+        public functionCall(Id id, ArrayList<Exp> args){
+                this.id = id;
+                this.args = args;
+        }
+}
+
 
 //If
 public class If extends Command {
-  //Condition
-  Exp exp;
-  ArrayList<Comamand> comandos;
+        //Condition
+        Exp exp;
+        ArrayList<Command> comandos;
 
+        public If (Exp exp, ArrayList<Command> comandos) {
+                this.exp = exp;
+                this.comandos = comandos;
+        }
 
 }
 
 //While
 public class While extends Command {
-  Exp exp;
-  ArrayList<Command> commandos;
+        Exp exp;
+        ArrayList<Command> comandos;
+
+        public While (Exp exp, ArrayList<Command> comandos) {
+                this.exp = exp;
+                this.comandos = comandos;
+        }
+
 }
 
 //Do While
@@ -572,12 +825,22 @@ public class DoWhile extends While {}
 
 //Return
 public class Return extends Command {
-  private String Value;
+        private Exp exp;
+
+public Return (Exp exp) {
+        this.exp = exp;
+}
+
 }
 
 //Print
 public class Print extends Command {
-  Exp exp;
+        Exp exp;
+
+        public Print (Exp exp) {
+                this.exp = exp;
+        }
+
 }
 
 // ----------------------------------
@@ -597,28 +860,32 @@ public class Bool extends Type{}
 
 //ID
 public class ID {
-  String nome;
+        String nome;
+
+        public ID (String nome) {
+                this.nome = nome;
+        }
 
 }
 
 //NUM
 public class NUM {
-  String valor;
+        String valor;
 
-  public NUM (String valor){this.valor=valor;}
+        public NUM (String valor){this.valor=valor;}
 
 }
 
 public class Bool {
-  String valor;
-  public Bool(String valor){this.valor=valor;}
+        String valor;
+        public Bool(String valor){this.valor=valor;}
 }
 //---- Exp
 
-public class Exp extends ExpBase{
-  private ExpBase exp1;
-  private Op op;
-  private ExpBase exp1;
+public class Exp extends ExpBase{ //TODO expbase nao existe mais
+        private ExpBase exp1;
+        private Op op;
+        private ExpBase exp1;
 }
 
 public class Fator extends ExpBase {
@@ -626,37 +893,73 @@ public class Fator extends ExpBase {
 }
 
 //Base
-public abstract class Exp {
-
-}
+public abstract class Exp {}
 
 //Exp op Exp
 class ExpOpExp extends Exp {
-  Exp exp1;
-  String op;
-  Exp exp2;
+        Exp exp1;
+        String op;
+        Exp exp2;
+
+        public ExpOpExp (Exp exp1, String op, Exp exp2) {
+                this.exp1 = exp1;
+                this.op = op;
+                this.exp2 = exp2;
+        }
+
 }
 
 //Fator
-class ExpFator extends Exp{
-  Fator fator;
+class ExpFator extends Exp {
+        Fator fator;
+
+        public ExpFator (Fator fator) {
+                this.fator = fator;
+        }
+
 }
 
 //Fator base
 public abstract class Fator {}
 
-//Fator = id ou Fator = lista
+//Fator = id
 class FatorId extends Fator {
-  ID id;
+        ID id;
+
+        public FatorId (Id id){
+                this.id = id;
+        }
+
+}
+
+//Fator = id (lista)
+class FatorIdLista extends Fator {
+        ID id;
+        ArrayList<Exp> exp;
+
+        public FatorIdLista (Id id, ArrayList<Exp> exp){
+                this.id = id;
+                this.exp = exp;
+        }
+
 }
 
 //Fator = num
 class FatorNum extends Fator {
-  NUM num;
+        NUM num;
+
+        public FatorNum (NUM num) {
+                this.num = num;
+        }
+
 }
 
 
 //Fator = bool
 class FatorBool extends Fator {
-  Bool valor;
+        Bool valor;
+
+        public FatorBool (Bool valor){
+                this.valor = valor;
+        }
 }

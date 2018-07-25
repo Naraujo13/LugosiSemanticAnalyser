@@ -2,18 +2,7 @@ PARSER_BEGIN(Lugosi)
 import java.io.*;
 import java.util.ArrayList;
 
-public class Lugosi {
-
-
-	public static void main(String args[]) throws ParseException,IOException {
-
-		Lugosi parser = new Lugosi(new FileInputStream(args[0])); //TODO tem q ter outro nome, lugosi tem que ser a regra incial
-		Object e = parser.Lugosi();
-		pretty_printer(e);
-
-	}
-
-
+/*
 //TODO classe lugosi
 
 	static void pretty_printer()
@@ -253,7 +242,7 @@ public class Lugosi {
 		}
 	}
 }
-
+*/
 
 public class Lugosi {
 	private Main main_func;
@@ -262,6 +251,14 @@ public class Lugosi {
 	public Lugosi(Main main_func, ArrayList<Func> funcs){
 		this.main_func = main_func;
 		this.funcs = new ArrayList(funcs);
+	}
+  
+  public static void main(String args[]) throws ParseException,IOException {
+
+		Lugosi parser = new Lugosi(new FileInputStream(args[0])); //TODO tem q ter outro nome, lugosi tem que ser a regra incial
+		Object e = parser.Lugosi();
+		pretty_printer(e);
+
 	}
 }
 
@@ -549,9 +546,9 @@ TOKEN :
 }
 
 void SeqComandos():
-{ArrayList<Command> comandos = new ArrayList<>(); }
+{Command c; ArrayList<Command> comandos = new ArrayList<Command>();}
 {
-	( { comandos.add(Comando()); } )*
+	( c=Comando() {comandos.add(c);})*
 
 	{return comandos;}
 }
@@ -572,10 +569,8 @@ void Comando():
 	{return c;}
 }
 
-Func(Type returnType, String name, ArrayList<Var> args, ArrayList<Var> vars, ArrayList<Commands> commands) //TODO ????
-
 void Func ():
-{ ArrayLis<Func> functions = new ArrayList<>(); Type returnType; String name;  ArrayList<Var> args; ArrayList<Var> vars; ArrayList<Command> comandos; Token token; }
+{ ArrayLis<Func> functions = new ArrayList<Func>(); Type returnType; String name;  ArrayList<Var> args; ArrayList<Var> vars; ArrayList<Command> comandos; Token token; }
 {
 
 	(<FUNCTION> {returnType = Tipo();} t=<ID> <APARENTESES> { args = VarDecl(); } <FPARENTESES> <ACHAVES> {vars = VarDecl();} {comandos = SeqComandos();} <FCHAVES> {functions.add(new Func(returnType, t.image, args, vars, comandos));})*
@@ -594,10 +589,10 @@ void Exp():
 }
 
 void Fator():
-{ExpFator expF=null;ID id=null;ArrayList<Exp> l = new ArrayList<>();Token t;}
+{ExpFator expF=null;ID id=null;ArrayList<Exp> l = new ArrayList<Exp>();Token t;}
 {
 	
-		(t=<ID> {id=new ID(t.image);} (<APARENTESES> (l=ListaExp())?  <FPARENTESES>)? {expF = new FatorIdLista(id,l)})
+		(t=<ID> {id=new ID(t.image);} ( <APARENTESES> (l=ListaExp())?  <FPARENTESES> )? {expF = new FatorIdLista(id,l);})
 	| (t=<NUMERO> {expF = new FatorNum(t.image);})
 	| (t=<TRUE>   {expF = new FatorBool(t.image);})
 	| (t=<FALSE>  {expF = new FatorBool(t.image);})
@@ -606,9 +601,9 @@ void Fator():
 }
 
 void ListaExp():
-{ArrayList<Exp> retorno = new ArrayList<>();}
+{ArrayList<Exp> retorno = new ArrayList<Exp>();}
 {
-	{retorno.add(Exp())} (<VIRGULA> {retorno.add(Exp())})*
+	{retorno.add(Exp());} (<VIRGULA> {retorno.add(Exp());})*
 
 	{return retorno;}
 }
@@ -624,7 +619,7 @@ void Tipo():
 }
 
 void VarDecl():
-{ ArrayList<Var> lista_var = new ArrayList<>(); Type type=null; ID id=null; Token t;}
+{ ArrayList<Var> lista_var = new ArrayList<Var>(); Type type=null; ID id=null; Token t;}
 {
 	( <VAR> { type=Tipo(); } t=<ID> { id = new ID(t.image); } <PVIRGULA> { lista_var.add(new Var(type, id)); } )*
 	{return lista_var;}
