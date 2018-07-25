@@ -256,12 +256,22 @@ class Lugosi implements LugosiConstants {
   public static void main(String args[]) throws ParseException,IOException {
 
                 Lugosi parser = new Lugosi(new FileInputStream(args[0]));
-                parser.Lugosi();
-                //pretty_printer(e);
-        //System.println("Teste");
+        System.out.println((parser.Lugosi()).toString());
 
                 return;
 
+        }
+
+        public String toString(){
+
+                String retorno = "";
+                //Main
+                retorno += "\u005cn" + this.main_func.toString();
+                //Functions
+                for (Func f : funcs) {
+                        retorno += f.toString();
+                }
+                return retorno;
         }
 
   static final public ArrayList<Command> SeqComandos() throws ParseException {
@@ -749,6 +759,51 @@ class Func {
                 this.comandos = new ArrayList(comandos);
         }
 
+        public String toString(){
+
+                String retorno = "\u005cn";
+
+                //Retorno
+                retorno += this.returnType.toString();
+
+                //Nome
+                retorno += " " + this.name;
+
+                //Args
+                retorno += "(";
+                boolean flag = false;
+                for (Var arg : args){
+                        if (flag)
+                                retorno += ", ";
+                        else
+                                flag = true;
+                        retorno += arg.toString();
+                }
+                retorno += ")";
+
+                //Decl
+                retorno += "\u005cn{";
+                flag = false;
+                for (Var arg : args){
+                        retorno += "\u005cn";
+                        if (flag)
+                                retorno += ", ";
+                        else
+                                flag = true;
+                        retorno += arg.toString();
+                }
+                if (args.size() > 0)
+                        retorno += ";";
+
+                //Comandos
+                flag = false;
+                for (Command c : comandos){
+                        retorno += c.toString();
+                }
+                retorno += "\u005cn}";
+
+                return retorno;
+        }
 }
 
 class Main extends Func {
@@ -774,6 +829,10 @@ class Var {
                 this.type = type;
                 this.id = id;
         }
+
+        public String toString() {
+                return (type.toString() + " " + id.toString());
+        }
 }
 
 //--- Comandos
@@ -789,6 +848,10 @@ class Atrib extends Command {
                 this.exp = exp;
         }
 
+        public String toString() {
+                return ("\u005cn" + id.toString() + " := " + exp.toString() + ";");
+        }
+
 }
 
 //Chamada de função
@@ -800,6 +863,27 @@ class functionCall extends Command {
         public functionCall(ID id, ArrayList<Exp> args){
                 this.id = id;
                 this.args = args;
+        }
+
+        public String toString() {
+                String retorno = "\u005cn";
+
+                //Nome
+                retorno += id.toString();
+
+                //Parametros
+                retorno += "(";
+                boolean flag = false;
+                for (Exp arg : args) {
+                        if (flag)
+                                retorno += ", ";
+                        else
+                                flag = true;
+                        retorno += arg.toString();
+                }
+                retorno += ");";
+
+                return retorno;
         }
 }
 
@@ -815,6 +899,24 @@ class If extends Command {
                 this.comandos = comandos;
         }
 
+        public String toString(){
+
+                String retorno = "\u005cnif (";
+
+                //condition
+                retorno += exp.toString();
+                retorno += ") ";
+
+                //comandos
+                retorno += "{";
+                for (Command c : comandos) {
+                        retorno += c.toString();
+                }
+                retorno += "\u005cn}";
+
+                return retorno;
+        }
+
 }
 
 //While
@@ -827,6 +929,23 @@ class While extends Command {
                 this.comandos = comandos;
         }
 
+        public String toString(){
+                String retorno = "\u005cnwhile (";
+
+                //Condition
+                retorno += exp.toString();
+                retorno += ") do {";
+
+                //Comandos
+                for (Command c : comandos) {
+                        retorno += c.toString();
+                }
+                retorno += "\u005cn}";
+
+                return retorno;
+
+        }
+
 }
 
 //Do While
@@ -836,15 +955,37 @@ class DoWhile extends While {
     super(exp, comandos);
   }
 
+  public String toString(){
+                String retorno = "\u005cndo {";
+
+                //Comandos
+                for (Command c : comandos) {
+                        retorno += c.toString();
+                }
+                retorno += "\u005cn} while (";
+
+                //Condição
+                retorno += exp.toString();
+
+                retorno += ");";
+
+                return retorno;
+
+  }
+
 }
 
 //Return
 class Return extends Command {
         private Exp exp;
 
-public Return (Exp exp) {
-        this.exp = exp;
-}
+        public Return (Exp exp) {
+                this.exp = exp;
+        }
+
+        public String toString(){
+                return ("\u005cnreturn " + exp.toString() + ";");
+        }
 
 }
 
@@ -856,18 +997,28 @@ class Print extends Command {
                 this.exp = exp;
         }
 
+        public String toString() {
+                return ("\u005cnprint (" + exp.toString() + ");");
+        }
+
 }
 
 // ----------------------------------
-
-class Indexing extends Command {}
 
 
 //----- Types
 
 abstract class Type {}
-class BoolType extends Type {}
-class IntType extends Type {}
+class BoolType extends Type {
+        public String toString() {
+                return "bool";
+        }
+}
+class IntType extends Type {
+        public String toString(){
+                return "int";
+        }
+}
 
 // -----------------------------------
 
@@ -879,6 +1030,10 @@ class ID {
                 this.nome = nome;
         }
 
+        public String toString(){
+                return nome;
+        }
+
 }
 
 //NUM
@@ -887,11 +1042,19 @@ class NUM {
 
         public NUM (String valor){this.valor=valor;}
 
+        public String toString() {
+                return valor;
+        }
+
 }
 
 class Bool {
         String valor;
         public Bool(String valor){this.valor=valor;}
+
+        public String toString(){
+                return valor;
+        }
 }
 //---- Exp
 
@@ -912,6 +1075,10 @@ class ExpOpExp extends Exp {
                 this.exp2 = exp2;
         }
 
+        public String toString() {
+                return (exp1.toString() + " " + op + " " + exp2.toString());
+        }
+
 }
 
 
@@ -923,6 +1090,9 @@ class FatorId extends Fator {
                 this.id = id;
         }
 
+        public String toString(){
+                return id.toString();
+        }
 }
 
 //Fator = id (lista)
@@ -935,6 +1105,28 @@ class FatorIdLista extends Fator {
                 this.exp = exp;
         }
 
+        public String toString() {
+                String retorno = id.toString();
+
+                if (exp.size() > 0)
+                        retorno += " ( ";
+
+                boolean flag = false;
+                for (Exp e : exp){
+                        if (flag)
+                                retorno += ", ";
+                        else
+                                flag = true;
+                        retorno += exp.toString();
+                }
+
+                if (exp.size() > 0)
+                        retorno += " )";
+
+                return retorno;
+
+        }
+
 }
 
 //Fator = num
@@ -943,6 +1135,10 @@ class FatorNum extends Fator {
 
         public FatorNum (NUM num) {
                 this.num = num;
+        }
+
+        public String toString() {
+                return num.toString();
         }
 
 }
@@ -954,5 +1150,9 @@ class FatorBool extends Fator {
 
         public FatorBool (Bool valor){
                 this.valor = valor;
+        }
+
+        public String toString(){
+                return valor.toString();
         }
 }
