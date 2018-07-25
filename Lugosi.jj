@@ -247,6 +247,7 @@ import java.util.ArrayList;
 class Lugosi {
 	private Main main_func;
 	private ArrayList<Func> funcs;
+	public static Boolean linguagem=false;
 
 	public Lugosi(Main main_func, ArrayList<Func> funcs){
 		this.main_func = main_func;
@@ -255,6 +256,10 @@ class Lugosi {
   
   public static void main(String args[]) throws ParseException,IOException {
 
+    	if(args[1].equals("1"))
+    	{
+    		linguagem = true;
+    	}
 		Lugosi parser = new Lugosi(new FileInputStream(args[0]));
     	System.out.println((parser.Lugosi()).toString());
 
@@ -292,11 +297,19 @@ class Func {
 	}
 
 	public String toString(){
-
+		
 		String retorno = "\n";
-
+		if( !(this.returnType instanceof NoneType) )
+			retorno += "function";
+		
 		//Retorno
-		retorno += this.returnType.toString();
+		if(!Lugosi.linguagem)
+		{
+			retorno += this.returnType.toString();
+		}
+		else {
+			retorno += "int";
+		}
 
 		//Nome
 		retorno += " " + this.name;
@@ -335,19 +348,34 @@ class Func {
 		retorno += "\n}";
 
 		return retorno;
+		
 	}
 }
 
 class Main extends Func {
 
 	public Main(ArrayList<Var> vars, ArrayList<Command> commands){
+		//Type aux = new NoneType();
+		/*if(Lugosi.linguagem)
+		{
+			super(
+				new IntType(),
+				"main",
+				new ArrayList(),
+				new ArrayList(vars),
+				new ArrayList(commands)
+			);
+		}
+		else {*/
 		super(
-			new IntType(),
+			new NoneType(),
 			"main",
 			new ArrayList(),
 			new ArrayList(vars),
 			new ArrayList(commands)
 		);
+		//}
+		
 	}
 
 }
@@ -381,6 +409,8 @@ class Atrib extends Command {
 	}
 
 	public String toString() {
+		if(Lugosi.linguagem)
+			return( "\n" + id.toString() + " = " + exp.toString() + ";");
 		return ("\n" + id.toString() + " := " + exp.toString() + ";");
 	}
 
@@ -399,6 +429,7 @@ class functionCall extends Command {
 
 	public String toString() {
 		String retorno = "\n";
+
 
 		//Nome
 		retorno += id.toString();
@@ -444,7 +475,10 @@ class If extends Command {
 		for (Command c : comandos) {
 			retorno += c.toString();
 		}
-		retorno += "\n}";
+		if(Lugosi.linguagem)
+			retorno += "\n}";
+		else
+			retorno += "\n};";
 
 		return retorno;
 	}
@@ -466,13 +500,16 @@ class While extends Command {
 
 		//Condition
 		retorno += exp.toString();
-		retorno += ") do {";
+		if(Lugosi.linguagem)
+			retorno += ")\n{";
+		else
+			retorno += ") do {";
 
 		//Comandos
 		for (Command c : comandos) {
 			retorno += c.toString();
 		}
-		retorno += "\n}";
+		retorno += "\n};";
 
 		return retorno;
 
@@ -530,6 +567,9 @@ class Print extends Command {
 	}
 
 	public String toString() {
+		if(Lugosi.linguagem)
+			return ("\nprintf ('%d', " + exp.toString() + ");");
+		
 		return ("\nprint (" + exp.toString() + ");");
 	}
 
@@ -549,6 +589,11 @@ class BoolType extends Type {
 class IntType extends Type {
 	public String toString(){
 		return "int";
+	}
+}
+class NoneType extends Type {
+	public String toString(){
+		return "";
 	}
 }
 
