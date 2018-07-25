@@ -299,8 +299,8 @@ class Func {
 	public String toString(){
 		
 		String retorno = "\n";
-		if( !(this.returnType instanceof NoneType) )
-			retorno += "function";
+		if( !(this.returnType instanceof NoneType) && !Lugosi.linguagem)
+			retorno += "function ";
 		
 		//Retorno
 		if(!Lugosi.linguagem)
@@ -328,14 +328,9 @@ class Func {
 
 		//Decl
 		retorno += "\n{";
-		flag = false;
-		for (Var arg : args){
+		for (Var var : vars){
 			retorno += "\n";
-			if (flag)
-				retorno += ", ";
-			else
-				flag = true;
-			retorno += arg.toString();
+			retorno += var.toString() + ";";
 		}
 		if (args.size() > 0)
 			retorno += ";";
@@ -391,6 +386,9 @@ class Var {
 	}
 
 	public String toString() {
+		if (!Lugosi.linguagem)
+			return ("var " + type.toString() + " " + id.toString());
+		else
 		return (type.toString() + " " + id.toString());
 	}
 }
@@ -509,6 +507,10 @@ class While extends Command {
 		for (Command c : comandos) {
 			retorno += c.toString();
 		}
+		
+		if(Lugosi.linguagem)
+			retorno += "\n}";
+		else
 		retorno += "\n};";
 
 		return retorno;
@@ -694,7 +696,7 @@ class FatorIdLista extends Fator {
 				retorno += ", ";
 			else
 				flag = true;
-			retorno += exp.toString();
+			retorno += e.toString();
 		}
 		
 		if (exp.size() > 0)
@@ -824,7 +826,7 @@ Fator Fator():
 {Fator expF=null;ID id=null;ArrayList<Exp> l = new ArrayList<Exp>();Token t;}
 {
 	(
-		(t=<ID> {id=new ID(t.image);} ( <APARENTESES> (l=ListaExp())?  <FPARENTESES>)? {expF = new FatorIdLista(id,l);})
+		(t=<ID> {id=new ID(t.image);} ( <APARENTESES> (l=ListaExp())  <FPARENTESES>)? {expF = new FatorIdLista(id,l);})
 		| (t=<NUMERO> {expF = new FatorNum(new NUM(t.image));})
 		| (t=<TRUE>   {expF = new FatorBool(new Bool(t.image));})
 		| (t=<FALSE>  {expF = new FatorBool(new Bool(t.image));})
@@ -836,7 +838,7 @@ Fator Fator():
 ArrayList<Exp> ListaExp():
 {ArrayList<Exp> retorno = new ArrayList<Exp>();}
 {
-	({retorno.add(Exp());} (<VIRGULA> {retorno.add(Exp());})+)
+	({retorno.add(Exp());} (<VIRGULA> {retorno.add(Exp());})*)
 
 	{return retorno;}
 }

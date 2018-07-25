@@ -247,6 +247,7 @@ import java.util.ArrayList;
 class Lugosi implements LugosiConstants {
         private Main main_func;
         private ArrayList<Func> funcs;
+        public static Boolean linguagem=false;
 
         public Lugosi(Main main_func, ArrayList<Func> funcs){
                 this.main_func = main_func;
@@ -255,6 +256,10 @@ class Lugosi implements LugosiConstants {
 
   public static void main(String args[]) throws ParseException,IOException {
 
+        if(args[1].equals("1"))
+        {
+                linguagem = true;
+        }
                 Lugosi parser = new Lugosi(new FileInputStream(args[0]));
         System.out.println((parser.Lugosi()).toString());
 
@@ -431,21 +436,14 @@ class Lugosi implements LugosiConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case APARENTESES:
         jj_consume_token(APARENTESES);
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case VIRGULA:
-          l = ListaExp();
-          break;
-        default:
-          jj_la1[5] = jj_gen;
-          ;
-        }
+        l = ListaExp();
         jj_consume_token(FPARENTESES);
         break;
       default:
-        jj_la1[6] = jj_gen;
+        jj_la1[5] = jj_gen;
         ;
       }
-                                                                                                expF = new FatorIdLista(id,l);
+                                                                                               expF = new FatorIdLista(id,l);
       break;
     case NUMERO:
       t = jj_consume_token(NUMERO);
@@ -460,7 +458,7 @@ class Lugosi implements LugosiConstants {
                                expF = new FatorBool(new Bool(t.image));
       break;
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[6] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -473,16 +471,16 @@ class Lugosi implements LugosiConstants {
           retorno.add(Exp());
     label_3:
     while (true) {
-      jj_consume_token(VIRGULA);
-                                           retorno.add(Exp());
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case VIRGULA:
         ;
         break;
       default:
-        jj_la1[8] = jj_gen;
+        jj_la1[7] = jj_gen;
         break label_3;
       }
+      jj_consume_token(VIRGULA);
+                                           retorno.add(Exp());
     }
          {if (true) return retorno;}
     throw new Error("Missing return statement in function");
@@ -500,7 +498,7 @@ class Lugosi implements LugosiConstants {
                               type = new BoolType();
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[8] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -517,7 +515,7 @@ class Lugosi implements LugosiConstants {
         ;
         break;
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[9] = jj_gen;
         break label_4;
       }
       jj_consume_token(VAR);
@@ -561,13 +559,13 @@ class Lugosi implements LugosiConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[11];
+  static final private int[] jj_la1 = new int[10];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x41e8000,0x200200,0x41e8000,0x400000,0xd800200,0x800,0x200,0xd800000,0x800,0x6000,0x40,};
+      jj_la1_0 = new int[] {0x41e8000,0x200200,0x41e8000,0x400000,0xd800200,0x200,0xd800000,0x800,0x6000,0x40,};
    }
 
   /** Constructor with InputStream. */
@@ -588,7 +586,7 @@ class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -602,7 +600,7 @@ class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -619,7 +617,7 @@ class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -629,7 +627,7 @@ class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -645,7 +643,7 @@ class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -654,7 +652,7 @@ class Lugosi implements LugosiConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -710,7 +708,7 @@ class Lugosi implements LugosiConstants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 10; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -762,9 +760,17 @@ class Func {
         public String toString(){
 
                 String retorno = "\u005cn";
+                if( !(this.returnType instanceof NoneType) && !Lugosi.linguagem)
+                        retorno += "function ";
 
                 //Retorno
-                retorno += this.returnType.toString();
+                if(!Lugosi.linguagem)
+                {
+                        retorno += this.returnType.toString();
+                }
+                else {
+                        retorno += "int";
+                }
 
                 //Nome
                 retorno += " " + this.name;
@@ -783,14 +789,9 @@ class Func {
 
                 //Decl
                 retorno += "\u005cn{";
-                flag = false;
-                for (Var arg : args){
+                for (Var var : vars){
                         retorno += "\u005cn";
-                        if (flag)
-                                retorno += ", ";
-                        else
-                                flag = true;
-                        retorno += arg.toString();
+                        retorno += var.toString() + ";";
                 }
                 if (args.size() > 0)
                         retorno += ";";
@@ -803,19 +804,34 @@ class Func {
                 retorno += "\u005cn}";
 
                 return retorno;
+
         }
 }
 
 class Main extends Func {
 
         public Main(ArrayList<Var> vars, ArrayList<Command> commands){
+                //Type aux = new NoneType();
+                /*if(Lugosi.linguagem)
+		{
+			super(
+				new IntType(),
+				"main",
+				new ArrayList(),
+				new ArrayList(vars),
+				new ArrayList(commands)
+			);
+		}
+		else {*/
                 super(
-                        new IntType(),
+                        new NoneType(),
                         "main",
                         new ArrayList(),
                         new ArrayList(vars),
                         new ArrayList(commands)
                 );
+                //}
+
         }
 
 }
@@ -831,6 +847,9 @@ class Var {
         }
 
         public String toString() {
+                if (!Lugosi.linguagem)
+                        return ("var " + type.toString() + " " + id.toString());
+                else
                 return (type.toString() + " " + id.toString());
         }
 }
@@ -849,6 +868,8 @@ class Atrib extends Command {
         }
 
         public String toString() {
+                if(Lugosi.linguagem)
+                        return( "\u005cn" + id.toString() + " = " + exp.toString() + ";");
                 return ("\u005cn" + id.toString() + " := " + exp.toString() + ";");
         }
 
@@ -867,6 +888,7 @@ class functionCall extends Command {
 
         public String toString() {
                 String retorno = "\u005cn";
+
 
                 //Nome
                 retorno += id.toString();
@@ -912,7 +934,10 @@ class If extends Command {
                 for (Command c : comandos) {
                         retorno += c.toString();
                 }
-                retorno += "\u005cn}";
+                if(Lugosi.linguagem)
+                        retorno += "\u005cn}";
+                else
+                        retorno += "\u005cn};";
 
                 return retorno;
         }
@@ -934,13 +959,20 @@ class While extends Command {
 
                 //Condition
                 retorno += exp.toString();
-                retorno += ") do {";
+                if(Lugosi.linguagem)
+                        retorno += ")\u005cn{";
+                else
+                        retorno += ") do {";
 
                 //Comandos
                 for (Command c : comandos) {
                         retorno += c.toString();
                 }
-                retorno += "\u005cn}";
+
+                if(Lugosi.linguagem)
+                        retorno += "\u005cn}";
+                else
+                retorno += "\u005cn};";
 
                 return retorno;
 
@@ -998,6 +1030,9 @@ class Print extends Command {
         }
 
         public String toString() {
+                if(Lugosi.linguagem)
+                        return ("\u005cnprintf ('%d', " + exp.toString() + ");");
+
                 return ("\u005cnprint (" + exp.toString() + ");");
         }
 
@@ -1017,6 +1052,11 @@ class BoolType extends Type {
 class IntType extends Type {
         public String toString(){
                 return "int";
+        }
+}
+class NoneType extends Type {
+        public String toString(){
+                return "";
         }
 }
 
@@ -1117,7 +1157,7 @@ class FatorIdLista extends Fator {
                                 retorno += ", ";
                         else
                                 flag = true;
-                        retorno += exp.toString();
+                        retorno += e.toString();
                 }
 
                 if (exp.size() > 0)
