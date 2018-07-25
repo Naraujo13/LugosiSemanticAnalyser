@@ -2,8 +2,7 @@ main {
 	var int x;
   var int y;
   x_1a := (x + y);
-  z := x ((x + y), (y - x), true, false, 200.5);
-  y ( x );
+  y ( x, y);
   if ((x == y)) {
     y := (x + y);
   };

@@ -5,7 +5,6 @@ main {
 
   x := 10;
   y := true;
-  z := x ((x + y), (y - x), true, false, 200.5);
 
   if ((x && y)){
     while ((x > 0)){
