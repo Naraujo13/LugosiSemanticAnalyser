@@ -293,15 +293,15 @@ class Lugosi implements LugosiConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ID:
       t = jj_consume_token(ID);
-                                  id = new ID(t.image);
+                            id = new ID(t.image);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case ATRIB:
         jj_consume_token(ATRIB);
-                                                                     c = new Atrib(id, Exp());
+                                                               c = new Atrib(id, Exp());
         break;
       case APARENTESES:
         jj_consume_token(APARENTESES);
-                                                                                                                       c = new functionCall(id, ListaExp());
+                                                                                                                 c = new functionCall(id, ListaExp());
         jj_consume_token(FPARENTESES);
         break;
       default:
@@ -395,20 +395,20 @@ class Lugosi implements LugosiConstants {
       t = jj_consume_token(OP);
       e2 = Exp();
       jj_consume_token(FPARENTESES);
-                                                                       retorno = new ExpOpExp(e1,t.image,e2);
+                                                                retorno = new ExpOpExp(e1,t.image,e2);
       break;
     case TRUE:
     case FALSE:
     case ID:
     case NUMERO:
       retorno = Fator();
-         {if (true) return retorno;}
       break;
     default:
       jj_la1[4] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
+         {if (true) return retorno;}
     throw new Error("Missing return statement in function");
   }
 
@@ -439,22 +439,22 @@ class Lugosi implements LugosiConstants {
       break;
     case NUMERO:
       t = jj_consume_token(NUMERO);
-                       expF = new FatorNum(new NUM(t.image));
+                               expF = new FatorNum(new NUM(t.image));
       break;
     case TRUE:
       t = jj_consume_token(TRUE);
-                       expF = new FatorBool(new Bool(t.image));
+                               expF = new FatorBool(new Bool(t.image));
       break;
     case FALSE:
       t = jj_consume_token(FALSE);
-                       expF = new FatorBool(new Bool(t.image));
-         {if (true) return expF;}
+                               expF = new FatorBool(new Bool(t.image));
       break;
     default:
       jj_la1[7] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
+         {if (true) return expF;}
     throw new Error("Missing return statement in function");
   }
 
@@ -913,9 +913,6 @@ class ExpOpExp extends Exp {
         }
 
 }
-
-//Fator
-
 
 
 //Fator = id

@@ -570,7 +570,7 @@ Exp Exp():
 {Exp retorno;Exp e1=null;Exp e2=null;Token t;}
 {
 	
-		(<APARENTESES> e1=Exp() t=<OP> e2=Exp() <FPARENTESES> {retorno = new ExpOpExp(e1,t.image,e2);}) | (retorno=Fator())
+	((<APARENTESES> e1=Exp() t=<OP> e2=Exp() <FPARENTESES> {retorno = new ExpOpExp(e1,t.image,e2);}) | (retorno=Fator()))
 	
 	{return retorno;}
 }
@@ -578,11 +578,12 @@ Exp Exp():
 Fator Fator():
 {Fator expF=null;ID id=null;ArrayList<Exp> l = new ArrayList<Exp>();Token t;}
 {
-	
+	(
 		(t=<ID> {id=new ID(t.image);} ( <APARENTESES> (l=ListaExp())?  <FPARENTESES>)? {expF = new FatorIdLista(id,l);})
-	| (t=<NUMERO> {expF = new FatorNum(new NUM(t.image));})
-	| (t=<TRUE>   {expF = new FatorBool(new Bool(t.image));})
-	| (t=<FALSE>  {expF = new FatorBool(new Bool(t.image));})
+		| (t=<NUMERO> {expF = new FatorNum(new NUM(t.image));})
+		| (t=<TRUE>   {expF = new FatorBool(new Bool(t.image));})
+		| (t=<FALSE>  {expF = new FatorBool(new Bool(t.image));})
+	)
 	
 	{return expF;}
 }
